@@ -20,6 +20,7 @@ export function LandingHero({ candidate, designation, summary }: LandingHeroProp
     const cursorX = useMotionValue(0);
     const cursorY = useMotionValue(0);
     const [cursorPos, setCursorPos] = useState({ x: 0, y: 0 });
+    const [cursorState, setCursorState] = useState<"default" | "click" | "hover">("default");
 
     // Create parallax transforms for floating elements
     const floatingX1 = useTransform(cursorX, [0, window.innerWidth || 1024], [-40, 40]);
@@ -54,6 +55,22 @@ export function LandingHero({ candidate, designation, summary }: LandingHeroProp
                 backgroundRef.current.style.setProperty("--gradient-x", `${xPercent}%`);
                 backgroundRef.current.style.setProperty("--gradient-y", `${yPercent}%`);
             }
+
+            // Check if hovering interactive elements
+            const target = event.target as HTMLElement;
+            if (target && (target.tagName === "BUTTON" || target.tagName === "A" || target.closest("button") || target.closest("a") || target.classList.contains("interactive"))) {
+                setCursorState("hover");
+            } else {
+                setCursorState("default");
+            }
+        };
+
+        const handleMouseDown = () => {
+            setCursorState("click");
+        };
+
+        const handleMouseUp = () => {
+            setCursorState("default");
         };
 
         const updateCursor = () => {
@@ -71,10 +88,14 @@ export function LandingHero({ candidate, designation, summary }: LandingHeroProp
         };
 
         window.addEventListener("mousemove", handleMouseMove);
+        window.addEventListener("mousedown", handleMouseDown);
+        window.addEventListener("mouseup", handleMouseUp);
         animationFrameId = requestAnimationFrame(updateCursor);
 
         return () => {
             window.removeEventListener("mousemove", handleMouseMove);
+            window.removeEventListener("mousedown", handleMouseDown);
+            window.removeEventListener("mouseup", handleMouseUp);
             cancelAnimationFrame(animationFrameId);
         };
     }, [cursorX, cursorY]);
@@ -149,9 +170,9 @@ export function LandingHero({ candidate, designation, summary }: LandingHeroProp
                 </motion.div>
             </div>
 
-            {/* Custom cursor - square dot */}
+            {/* Custom cursor - theme-matched */}
             <motion.div
-                className={styles.customCursor}
+                className={`${styles.customCursor} ${styles[cursorState]}`}
                 ref={cursorRef}
                 style={{
                     x: cursorX,

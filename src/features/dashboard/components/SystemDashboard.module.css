@@ -1,6 +1,6 @@
 .shell {
   position: relative;
-  z-index: 1;
+  z-index: auto;
   background: var(--bg-root);
 }
 

@@ -1,6 +1,7 @@
 "use client";
 
 import { LandingHero } from "./LandingHero";
+import { EvidenceBoard } from "./EvidenceBoard";
 import type { LogRecord, ModuleRecord } from "@/types/system";
 
 import styles from "./SystemDashboard.module.css";
@@ -32,8 +33,10 @@ export function SystemDashboard({ logs, modules, systemMeta }: SystemDashboardPr
         summary={systemMeta.summary}
       />
 
+      <EvidenceBoard />
+
       <div className={styles.inner}>
-        {/* Content below landing page hidden for now - will be implemented based on future instructions */}
+        {/* Additional content can be added here */}
       </div>
     </section>
   );
