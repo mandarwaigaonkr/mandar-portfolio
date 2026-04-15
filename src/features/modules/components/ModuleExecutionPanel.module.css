@@ -1,0 +1,85 @@
+.panel {
+  margin-top: var(--space-6);
+  padding: var(--space-5);
+  border: 1px solid rgba(93, 129, 149, 0.24);
+  border-radius: 22px;
+  background: rgba(5, 14, 20, 0.82);
+}
+
+.header,
+.statusRow {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-4);
+  align-items: center;
+}
+
+.label,
+.statusRow span {
+  display: block;
+  color: var(--signal-primary);
+  font-size: 0.74rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.header strong,
+.statusRow strong {
+  display: block;
+  margin-top: var(--space-2);
+  color: var(--text-primary);
+}
+
+.header button {
+  padding: 0.75rem 0.95rem;
+  border: 1px solid rgba(127, 231, 214, 0.24);
+  border-radius: 999px;
+  background: rgba(127, 231, 214, 0.08);
+  color: var(--text-primary);
+  cursor: pointer;
+}
+
+.body,
+.collapsedState {
+  overflow: hidden;
+}
+
+.summary,
+.collapsedState,
+.bullets p {
+  margin: 0;
+  color: var(--text-secondary);
+  line-height: 1.65;
+}
+
+.summary {
+  margin-top: var(--space-5);
+}
+
+.stack {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  margin-top: var(--space-5);
+}
+
+.stackChip {
+  padding: 0.55rem 0.75rem;
+  border: 1px solid rgba(143, 183, 255, 0.24);
+  border-radius: 999px;
+  background: rgba(143, 183, 255, 0.08);
+  color: var(--text-primary);
+  font-size: 0.84rem;
+}
+
+.bullets {
+  display: grid;
+  gap: var(--space-3);
+  margin-top: var(--space-5);
+}
+
+.statusRow {
+  margin-top: var(--space-5);
+  padding-top: var(--space-4);
+  border-top: 1px solid rgba(93, 129, 149, 0.18);
+}
