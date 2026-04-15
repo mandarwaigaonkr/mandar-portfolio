@@ -1,10 +1,9 @@
 "use client";
 
-import { AnimatePresence, MotionConfig, motion } from "framer-motion";
+import { MotionConfig, motion } from "framer-motion";
 import { useEffect } from "react";
 
-import { AuthGate } from "@/features/auth/components/AuthGate";
-import { BootSequence } from "@/features/boot/components/BootSequence";
+import { BreachSequence } from "@/features/boot/components/BreachSequence";
 import { SystemDashboard } from "@/features/dashboard/components/SystemDashboard";
 import { useSystemStore } from "@/store/system-store";
 import type { LogRecord, ModuleRecord } from "@/types/system";
@@ -45,48 +44,27 @@ export function SystemShell({ logs, modules, systemMeta }: SystemShellProps) {
     return () => window.removeEventListener("mousemove", handlePointerMove);
   }, [setCursorState]);
 
+  // Dashboard is always mounted once unlocked — it sits BEHIND the breach panels
+  const showDashboard = currentView === "dashboard" || currentView === "module" || currentView === "logs";
+
   return (
     <main>
       <MotionConfig reducedMotion="user">
-        <AnimatePresence mode="wait">
-          {currentView === "boot" ? (
-            <motion.div
-              key="boot"
-              initial={{ opacity: 0.2 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.35 }}
-            >
-              <BootSequence systemMeta={systemMeta} />
-            </motion.div>
-          ) : null}
+        {/* Dashboard renders behind the breach panels */}
+        {showDashboard && (
+          <motion.div
+            key="workspace"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+          >
+            <SystemDashboard logs={logs} modules={modules} systemMeta={systemMeta} />
+          </motion.div>
+        )}
 
-          {currentView === "auth" ? (
-            <motion.div
-              key="auth"
-              initial={{ opacity: 0, y: 24 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -12 }}
-              transition={{ duration: 0.45, ease: "easeOut" }}
-            >
-              <AuthGate systemMeta={systemMeta} />
-            </motion.div>
-          ) : null}
-
-          {currentView === "dashboard" ||
-          currentView === "module" ||
-          currentView === "logs" ? (
-            <motion.div
-              key="workspace"
-              initial={{ opacity: 0, scale: 0.985 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
-            >
-              <SystemDashboard logs={logs} modules={modules} systemMeta={systemMeta} />
-            </motion.div>
-          ) : null}
-        </AnimatePresence>
+        {/* Breach sequence — renders ON TOP with z-index 10000 */}
+        {/* It handles its own split/removal internally */}
+        {(currentView === "boot" || showDashboard) && <BreachSequence />}
       </MotionConfig>
     </main>
   );

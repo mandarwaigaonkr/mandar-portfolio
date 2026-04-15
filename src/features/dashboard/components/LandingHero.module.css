@@ -1,3 +1,11 @@
+/* ========================================
+   LANDING HERO
+   Breathing name, floating tech panels,
+   corner HUD, floating code snippets.
+   Background matches dashboard seamlessly.
+   ======================================== */
+
+/* ── Main container — full viewport ── */
 .heroContainer {
     position: relative;
     width: 100%;
@@ -10,7 +18,7 @@
     z-index: 2;
 }
 
-/* Floating tech elements */
+/* ── Floating tech panels (parallax) ── */
 .floatingElement {
     position: absolute;
     z-index: 2;
@@ -45,7 +53,41 @@
     font-size: 0.7rem;
 }
 
-/* Center content */
+/* ── Floating code snippets ── */
+.codeSnippetsLayer {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+.codeSnippet {
+    position: absolute;
+    font-family: 'Courier New', monospace;
+    font-size: 0.62rem;
+    line-height: 1.5;
+    color: rgba(127, 231, 214, 0.08);
+    white-space: pre;
+    letter-spacing: 0.04em;
+    animation: codeDrift 40s linear infinite;
+    opacity: 0;
+}
+
+.codeSnippet:nth-child(1) { top: 8%; left: 5%; animation-delay: 0s; animation-duration: 45s; }
+.codeSnippet:nth-child(2) { top: 60%; right: 8%; animation-delay: -8s; animation-duration: 38s; }
+.codeSnippet:nth-child(3) { top: 30%; left: 65%; animation-delay: -15s; animation-duration: 50s; }
+.codeSnippet:nth-child(4) { top: 72%; left: 20%; animation-delay: -22s; animation-duration: 42s; }
+
+@keyframes codeDrift {
+    0% { opacity: 0; transform: translateY(0) translateX(0); }
+    5% { opacity: 0.08; }
+    50% { opacity: 0.05; transform: translateY(-30px) translateX(15px); }
+    95% { opacity: 0.08; }
+    100% { opacity: 0; transform: translateY(-60px) translateX(30px); }
+}
+
+/* ── Center content — name + tagline + description ── */
 .centerContent {
     position: relative;
     z-index: 5;
@@ -63,6 +105,23 @@
     letter-spacing: -0.02em;
     color: var(--text-primary);
     text-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+    animation: breathe 6s ease-in-out infinite;
+}
+
+@keyframes breathe {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.008); }
+}
+
+.tagline {
+    margin: var(--space-6) 0 0;
+    font-size: clamp(0.75rem, 1.2vw, 0.9rem);
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--signal-primary);
+    font-family: var(--font-mono), monospace;
+    font-weight: 400;
+    opacity: 0.7;
 }
 
 .designation {
@@ -76,19 +135,102 @@
 }
 
 .summaryText {
-    margin: var(--space-4) 0 0;
+    margin: var(--space-4) auto 0;
     max-width: 54ch;
     font-size: clamp(0.9rem, 1.8vw, 1.05rem);
     line-height: 1.8;
     color: var(--text-secondary);
     font-family: var(--font-serif), serif;
-    margin-left: auto;
-    margin-right: auto;
 }
 
+/* ── Corner HUD data points ── */
+.hudCorner {
+    position: absolute;
+    z-index: 6;
+    font-family: var(--font-mono), monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.08em;
+    color: rgba(127, 231, 214, 0.4);
+    line-height: 1.6;
+    pointer-events: none;
+}
+
+.hudTopLeft { top: 28px; left: 28px; }
+.hudTopRight { top: 28px; right: 28px; text-align: right; }
+.hudBottomLeft { bottom: 28px; left: 28px; }
+.hudBottomRight { bottom: 28px; right: 28px; text-align: right; }
+
+.hudLabel {
+    display: block;
+    font-size: 0.55rem;
+    letter-spacing: 0.14em;
+    color: rgba(127, 231, 214, 0.25);
+    text-transform: uppercase;
+    margin-bottom: 2px;
+}
+
+.hudValue {
+    display: block;
+    color: rgba(127, 231, 214, 0.5);
+}
+
+/* ── Status dot (blinking) ── */
+.statusDot {
+    display: inline-block;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--signal-primary);
+    margin-right: 6px;
+    vertical-align: middle;
+    animation: dotPulse 2s ease-in-out infinite;
+}
+
+@keyframes dotPulse {
+    0%, 100% { opacity: 0.3; box-shadow: none; }
+    50% { opacity: 1; box-shadow: 0 0 6px rgba(127, 231, 214, 0.5); }
+}
+
+/* ── Heartbeat waveform ── */
+.heartbeatContainer {
+    width: 80px;
+    height: 20px;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.heartbeatPath {
+    fill: none;
+    stroke: rgba(127, 231, 214, 0.35);
+    stroke-width: 1.5;
+    stroke-linecap: round;
+    stroke-dasharray: 200;
+    stroke-dashoffset: 200;
+    animation: heartbeatDraw 2s linear infinite;
+}
+
+@keyframes heartbeatDraw {
+    0% { stroke-dashoffset: 200; }
+    100% { stroke-dashoffset: 0; }
+}
+
+/* ── Responsive ── */
 @media (max-width: 768px) {
     .techPanel {
         padding: var(--space-3);
         font-size: 0.65rem;
+    }
+
+    .hudCorner {
+        font-size: 0.55rem;
+    }
+
+    .hudTopLeft, .hudBottomLeft { left: 16px; }
+    .hudTopRight, .hudBottomRight { right: 16px; }
+    .hudTopLeft, .hudTopRight { top: 16px; }
+    .hudBottomLeft, .hudBottomRight { bottom: 16px; }
+
+    .codeSnippet {
+        font-size: 0.5rem;
     }
 }

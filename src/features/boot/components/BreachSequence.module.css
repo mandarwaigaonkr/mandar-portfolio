@@ -1,0 +1,283 @@
+/* ========================================
+   BREACH SEQUENCE — Terminal + Vault Door Split
+   ======================================== */
+
+.shell {
+    position: fixed;
+    inset: 0;
+    z-index: 10000;
+    overflow: hidden;
+    font-family: 'Courier New', 'Lucida Console', monospace;
+    cursor: none;
+}
+
+/* ════════════════════════════════════════
+   SPLIT PANELS — The vault door halves
+   ════════════════════════════════════════ */
+
+.splitPanel {
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 50%;
+    overflow: hidden;
+    background: #000;
+    z-index: 2;
+    will-change: transform;
+}
+
+.splitTop {
+    top: 0;
+    transition: transform 1.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.splitBottom {
+    bottom: 0;
+    transition: transform 1.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* When splitting — panels slide away */
+.splitTop.splitActive {
+    transform: translateY(-105%);
+}
+
+.splitBottom.splitActive {
+    transform: translateY(105%);
+}
+
+/* Inner content wrapper — positions content relative to full viewport */
+.splitPanelInner {
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 200%; /* Double height so content spans full viewport */
+}
+
+.splitTop .splitPanelInner {
+    top: 0;
+}
+
+.splitBottom .splitPanelInner {
+    bottom: 0;
+}
+
+/* ════════════════════════════════════════
+   CENTER SEAM — The bifurcation line
+   ════════════════════════════════════════ */
+
+.seamLine {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: rgba(127, 231, 214, 0.25);
+    z-index: 10;
+    transform: translateY(-50%);
+    box-shadow: 0 0 6px rgba(127, 231, 214, 0.1);
+    transition: opacity 0.4s ease;
+}
+
+.seamLineActive {
+    opacity: 0;
+    transition: opacity 0.6s ease 0.3s;
+}
+
+/* ── Seam labels — pinned UI that moves with panels ── */
+.seamLabel {
+    position: absolute;
+    bottom: 12px;
+    left: 40px;
+    z-index: 5;
+}
+
+.seamLabelBottom {
+    position: absolute;
+    top: 12px;
+    left: 40px;
+    z-index: 5;
+}
+
+.seamLabelText {
+    font-size: 0.6rem;
+    letter-spacing: 0.18em;
+    color: rgba(127, 231, 214, 0.5);
+    text-transform: uppercase;
+    border-left: 2px solid rgba(255, 68, 68, 0.7);
+    padding-left: 8px;
+}
+
+/* ── Tracking lock circle ── */
+.trackingLock {
+    position: absolute;
+    top: 50%;
+    right: 60px;
+    transform: translateY(-50%);
+    z-index: 12;
+    width: 48px;
+    height: 48px;
+    border: 2px solid rgba(127, 231, 214, 0.4);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.55rem;
+    letter-spacing: 0.1em;
+    color: rgba(127, 231, 214, 0.6);
+    transition: opacity 0.5s ease, transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.trackingLockActive {
+    opacity: 0;
+    transform: translateY(-50%) scale(2);
+}
+
+/* ════════════════════════════════════════
+   TERMINAL TEXT
+   ════════════════════════════════════════ */
+
+.terminal {
+    position: absolute;
+    top: 40px;
+    left: 40px;
+    right: 40px;
+    bottom: 60px;
+    font-size: 0.82rem;
+    line-height: 1.7;
+    color: #33ff33;
+    letter-spacing: 0.04em;
+    overflow: hidden;
+    white-space: pre-wrap;
+    word-break: break-all;
+}
+
+.terminalLine {
+    opacity: 0;
+    animation: lineReveal 0.05s ease forwards;
+}
+
+@keyframes lineReveal {
+    to { opacity: 1; }
+}
+
+/* ── Blinking cursor ── */
+.cursor {
+    display: inline-block;
+    width: 8px;
+    height: 1.1em;
+    background: #33ff33;
+    vertical-align: text-bottom;
+    animation: cursorBlink 0.6s step-end infinite;
+    margin-left: 2px;
+}
+
+@keyframes cursorBlink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+}
+
+/* ── Log line types ── */
+.logPrefix { font-weight: 700; }
+.logPrefixLog { color: #33ff33; }
+.logPrefixWarn { color: #ffcc00; }
+.logPrefixOk { color: #33ff33; }
+.logPrefixSuccess { color: #00ffaa; }
+.logPrefixError { color: #ff3333; }
+.logText { color: #88cc88; }
+
+/* ════════════════════════════════════════
+   CRT SCAN LINES
+   ════════════════════════════════════════ */
+
+.scanLines {
+    position: absolute;
+    inset: 0;
+    z-index: 5;
+    pointer-events: none;
+    background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        rgba(0, 0, 0, 0.15) 2px,
+        rgba(0, 0, 0, 0.15) 4px
+    );
+    opacity: 0.5;
+}
+
+/* ════════════════════════════════════════
+   ACCESS GRANTED
+   ════════════════════════════════════════ */
+
+.accessGranted {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 8;
+    background: rgba(0, 0, 0, 0.85);
+    opacity: 0;
+    pointer-events: none;
+}
+
+.accessGranted.visible {
+    opacity: 1;
+    animation: grantedReveal 0.35s ease-out forwards;
+}
+
+.accessGrantedText {
+    font-size: clamp(2rem, 6vw, 5rem);
+    font-weight: 900;
+    color: #33ff33;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    text-shadow:
+        0 0 20px rgba(51, 255, 51, 0.6),
+        0 0 60px rgba(51, 255, 51, 0.3),
+        0 0 120px rgba(51, 255, 51, 0.15);
+    font-family: 'Courier New', monospace;
+    margin-bottom: 12px;
+}
+
+.accessGrantedSub {
+    font-size: clamp(0.8rem, 2vw, 1.1rem);
+    color: #33ff33;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    opacity: 0.7;
+    font-family: 'Courier New', monospace;
+}
+
+@keyframes grantedReveal {
+    0% { opacity: 0; transform: scale(0.98); }
+    50% { opacity: 1; transform: scale(1.005); }
+    100% { opacity: 1; transform: scale(1); }
+}
+
+/* ── Progress bar ── */
+.progressBar {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 2px;
+    background: #33ff33;
+    box-shadow: 0 0 10px rgba(51, 255, 51, 0.5);
+    z-index: 15;
+    transition: width 0.15s linear;
+}
+
+/* ── Mobile ── */
+@media (max-width: 768px) {
+    .terminal {
+        top: 20px;
+        left: 20px;
+        right: 20px;
+        bottom: 40px;
+        font-size: 0.72rem;
+    }
+
+    .seamLabel { left: 20px; }
+    .seamLabelBottom { left: 20px; }
+    .trackingLock { right: 20px; width: 36px; height: 36px; font-size: 0.5rem; }
+}
