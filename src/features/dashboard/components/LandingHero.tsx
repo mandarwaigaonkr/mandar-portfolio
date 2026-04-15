@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, useMotionValue, useTransform } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 
 import styles from "./LandingHero.module.css";
@@ -14,67 +14,119 @@ type LandingHeroProps = {
 export function LandingHero({ candidate, designation, summary }: LandingHeroProps) {
     const containerRef = useRef<HTMLDivElement>(null);
     const vignetteRef = useRef<HTMLDivElement>(null);
-    const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+    const cursorRef = useRef<HTMLDivElement>(null);
+    const backgroundRef = useRef<HTMLDivElement>(null);
+
+    const cursorX = useMotionValue(0);
+    const cursorY = useMotionValue(0);
+    const [cursorPos, setCursorPos] = useState({ x: 0, y: 0 });
+
+    // Create parallax transforms for floating elements
+    const floatingX1 = useTransform(cursorX, [0, window.innerWidth || 1024], [-40, 40]);
+    const floatingY1 = useTransform(cursorY, [0, window.innerHeight || 768], [-40, 40]);
+
+    const floatingX2 = useTransform(cursorX, [0, window.innerWidth || 1024], [30, -30]);
+    const floatingY2 = useTransform(cursorY, [0, window.innerHeight || 768], [30, -30]);
+
+    const floatingX3 = useTransform(cursorX, [0, window.innerWidth || 1024], [-30, 30]);
+    const floatingY3 = useTransform(cursorY, [0, window.innerHeight || 768], [50, -50]);
 
     useEffect(() => {
-        const handleMouseMove = (event: MouseEvent) => {
-            setMousePos({ x: event.clientX, y: event.clientY });
+        let animationFrameId: number;
+        let targetX = 0;
+        let targetY = 0;
 
-            // Update vignette position
+        const handleMouseMove = (event: MouseEvent) => {
+            targetX = event.clientX;
+            targetY = event.clientY;
+            setCursorPos({ x: event.clientX, y: event.clientY });
+
+            // Update vignette position immediately
             if (vignetteRef.current) {
                 vignetteRef.current.style.setProperty("--cursor-x", `${event.clientX}px`);
                 vignetteRef.current.style.setProperty("--cursor-y", `${event.clientY}px`);
             }
+
+            // Update background gradient
+            if (backgroundRef.current) {
+                const xPercent = (event.clientX / window.innerWidth) * 100;
+                const yPercent = (event.clientY / window.innerHeight) * 100;
+                backgroundRef.current.style.setProperty("--gradient-x", `${xPercent}%`);
+                backgroundRef.current.style.setProperty("--gradient-y", `${yPercent}%`);
+            }
+        };
+
+        const updateCursor = () => {
+            // Smooth interpolation for cursor
+            const currentX = cursorX.get();
+            const currentY = cursorY.get();
+
+            const dx = targetX - currentX;
+            const dy = targetY - currentY;
+
+            cursorX.set(currentX + dx * 0.25);
+            cursorY.set(currentY + dy * 0.25);
+
+            animationFrameId = requestAnimationFrame(updateCursor);
         };
 
         window.addEventListener("mousemove", handleMouseMove);
-        return () => window.removeEventListener("mousemove", handleMouseMove);
-    }, []);
+        animationFrameId = requestAnimationFrame(updateCursor);
+
+        return () => {
+            window.removeEventListener("mousemove", handleMouseMove);
+            cancelAnimationFrame(animationFrameId);
+        };
+    }, [cursorX, cursorY]);
 
     return (
         <div className={styles.heroContainer} ref={containerRef}>
+            {/* Dynamic gradient background synced with cursor */}
+            <div className={styles.gradientBg} ref={backgroundRef} />
+
             {/* Vignette spotlight effect */}
             <div className={styles.vignette} ref={vignetteRef} />
 
-            {/* Floating background images */}
+            {/* Floating tech elements */}
             <motion.div
-                className={styles.floatingImage}
-                style={{ left: "10%", top: "15%" }}
-                initial={{ opacity: 0, y: 40 }}
-                animate={{ opacity: 0.6, y: 0 }}
+                className={styles.floatingElement}
+                style={{ x: floatingX1, y: floatingY1, left: "8%", top: "12%" }}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 0.7 }}
                 transition={{ delay: 0.2, duration: 0.8 }}
             >
-                <div className={styles.imagePlaceholder}>IMAGE_01</div>
+                <div className={styles.techPanel}>
+                    <div className={styles.techText}>LAT: 48.8566 N</div>
+                    <div className={styles.techText}>LON: 2.3522 E</div>
+                    <div className={styles.techText}>SECURE_GRID_99</div>
+                </div>
             </motion.div>
 
             <motion.div
-                className={styles.floatingImage}
-                style={{ right: "15%", top: "30%" }}
-                initial={{ opacity: 0, y: 40 }}
-                animate={{ opacity: 0.5, y: 0 }}
+                className={styles.floatingElement}
+                style={{ x: floatingX2, y: floatingY2, right: "12%", top: "25%" }}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 0.7 }}
                 transition={{ delay: 0.4, duration: 0.8 }}
             >
-                <div className={styles.imagePlaceholder}>IMAGE_02</div>
+                <div className={styles.techPanel}>
+                    <div className={styles.techLog}>&gt;&gt; analyzing logic_</div>
+                    <div className={styles.techLog}>&gt;&gt; bug eliminated</div>
+                    <div className={styles.techLog}>&gt;&gt; system optimized</div>
+                    <div className={styles.techCoords}>X: {Math.round(cursorPos.x)} Y: {Math.round(cursorPos.y)}</div>
+                </div>
             </motion.div>
 
             <motion.div
-                className={styles.floatingImage}
-                style={{ left: "20%", bottom: "20%" }}
-                initial={{ opacity: 0, y: 40 }}
-                animate={{ opacity: 0.55, y: 0 }}
+                className={styles.floatingElement}
+                style={{ x: floatingX3, y: floatingY3, left: "15%", bottom: "18%" }}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 0.6 }}
                 transition={{ delay: 0.3, duration: 0.8 }}
             >
-                <div className={styles.imagePlaceholder}>IMAGE_03</div>
-            </motion.div>
-
-            <motion.div
-                className={styles.floatingImage}
-                style={{ right: "10%", bottom: "25%" }}
-                initial={{ opacity: 0, y: 40 }}
-                animate={{ opacity: 0.5, y: 0 }}
-                transition={{ delay: 0.5, duration: 0.8 }}
-            >
-                <div className={styles.imagePlaceholder}>IMAGE_04</div>
+                <div className={styles.techPanel}>
+                    <div className={styles.techCoords}>X: {Math.round(cursorPos.x)} Y: {Math.round(cursorPos.y)}</div>
+                </div>
             </motion.div>
 
             {/* Center content */}
@@ -97,18 +149,13 @@ export function LandingHero({ candidate, designation, summary }: LandingHeroProp
                 </motion.div>
             </div>
 
-            {/* Custom cursor */}
+            {/* Custom cursor - square dot */}
             <motion.div
                 className={styles.customCursor}
-                animate={{
-                    x: mousePos.x - 16,
-                    y: mousePos.y - 16
-                }}
-                transition={{
-                    type: "spring",
-                    stiffness: 500,
-                    damping: 28,
-                    mass: 0.5
+                ref={cursorRef}
+                style={{
+                    x: cursorX,
+                    y: cursorY,
                 }}
             />
         </div>
