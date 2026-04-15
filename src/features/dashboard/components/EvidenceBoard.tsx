@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, AnimatePresence } from "framer-motion";
-import { useState, useRef, useEffect, useCallback, createRef } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import styles from "./EvidenceBoard.module.css";
 
 type ViewMode = "list" | "slider";
@@ -239,24 +239,18 @@ export function EvidenceBoard() {
     const [hoveredId, setHoveredId] = useState<string | null>(null);
     const [originRect, setOriginRect] = useState<DOMRect | null>(null);
     const savedScrollY = useRef(0);
-    const rowRefs = useRef<Map<string, HTMLDivElement>>(new Map());
+    const elementRefs = useRef<Map<string, HTMLDivElement>>(new Map());
 
     const selectedEvidence = selectedId
         ? EVIDENCE_DATA.find((e) => e.id === selectedId)
         : null;
 
-    /* ── Handle list row click — capture bounding rect ── */
-    const handleListClick = useCallback((id: string) => {
-        const el = rowRefs.current.get(id);
+    /* ── Handle click — capture bounding rect for morph ── */
+    const handleItemClick = useCallback((id: string) => {
+        const el = elementRefs.current.get(id);
         if (el) {
             setOriginRect(el.getBoundingClientRect());
         }
-        setSelectedId(id);
-    }, []);
-
-    /* ── Handle slider click (uses old popup style) ── */
-    const handleSliderClick = useCallback((id: string) => {
-        setOriginRect(null); // null = use popup modal, not morph
         setSelectedId(id);
     }, []);
 
@@ -290,9 +284,6 @@ export function EvidenceBoard() {
     }, [selectedId]);
 
     const handleClose = useCallback(() => setSelectedId(null), []);
-
-    /* ── Is this a morph transition (list) or popup (slider)? ── */
-    const isMorphTransition = originRect !== null && selectedEvidence !== null;
 
     return (
         <div className={styles.boardContainer}>
@@ -347,9 +338,12 @@ export function EvidenceBoard() {
                             return (
                                 <motion.div
                                     key={item.id}
+                                    ref={(el: HTMLDivElement | null) => {
+                                        if (el) elementRefs.current.set(item.id, el);
+                                    }}
                                     className={`${styles.accordionColumn} ${isActive ? styles.accordionActive : ""} ${isCompressed ? styles.accordionCompressed : ""}`}
                                     onMouseEnter={() => setHoveredId(item.id)}
-                                    onClick={() => handleSliderClick(item.id)}
+                                    onClick={() => handleItemClick(item.id)}
                                     initial={{ opacity: 0, y: 30 }}
                                     animate={{ opacity: 1, y: 0 }}
                                     transition={{
@@ -443,11 +437,11 @@ export function EvidenceBoard() {
                         {EVIDENCE_DATA.map((item, idx) => (
                             <motion.div
                                 key={item.id}
-                                ref={(el) => {
-                                    if (el) rowRefs.current.set(item.id, el);
+                                ref={(el: HTMLDivElement | null) => {
+                                    if (el) elementRefs.current.set(item.id, el);
                                 }}
                                 className={`${styles.listRow} ${selectedId && selectedId !== item.id ? styles.listRowHidden : ""}`}
-                                onClick={() => handleListClick(item.id)}
+                                onClick={() => handleItemClick(item.id)}
                                 initial={{ opacity: 0, x: -20 }}
                                 animate={{ opacity: 1, x: 0 }}
                                 transition={{
@@ -492,9 +486,9 @@ export function EvidenceBoard() {
                 )}
             </AnimatePresence>
 
-            {/* ── Morphing Detail View (List mode) ── */}
+            {/* ── Morphing Detail View ── */}
             <AnimatePresence>
-                {isMorphTransition && selectedEvidence && originRect && (
+                {selectedEvidence && originRect && (
                     <motion.div
                         key={`morph-${selectedEvidence.id}`}
                         className={styles.morphContainer}
@@ -528,7 +522,7 @@ export function EvidenceBoard() {
                         }}
                         style={{ zIndex: 9999 }}
                     >
-                        {/* Background color that persists from the row */}
+                        {/* Background color that persists from the source element */}
                         <div
                             className={styles.morphBg}
                             style={{ background: selectedEvidence.color }}
@@ -618,110 +612,6 @@ export function EvidenceBoard() {
                             </div>
                         </motion.div>
                     </motion.div>
-                )}
-            </AnimatePresence>
-
-            {/* ── Popup Detail Modal (Slider mode only) ── */}
-            <AnimatePresence>
-                {!isMorphTransition && selectedEvidence && (
-                    <>
-                        <motion.div
-                            className={styles.backdrop}
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            exit={{ opacity: 0 }}
-                            transition={{ duration: 0.25 }}
-                            onClick={handleClose}
-                        />
-
-                        <div className={styles.detailContainer} onClick={handleClose}>
-                            <motion.div
-                                className={styles.detailContent}
-                                onClick={(e) => e.stopPropagation()}
-                                initial={{ opacity: 0, scale: 0.96, y: 20 }}
-                                animate={{ opacity: 1, scale: 1, y: 0 }}
-                                exit={{ opacity: 0, scale: 0.97, y: 10 }}
-                                transition={{
-                                    type: "spring",
-                                    damping: 28,
-                                    stiffness: 280,
-                                    mass: 0.8,
-                                }}
-                            >
-                                <button className={styles.backBtn} onClick={handleClose}>
-                                    ← BACK
-                                </button>
-
-                                <motion.div
-                                    variants={contentStagger}
-                                    initial="hidden"
-                                    animate="visible"
-                                    exit="exit"
-                                >
-                                    <motion.div className={styles.detailHeader} variants={contentItem}>
-                                        <span className={styles.detailLabel}>
-                                            {selectedEvidence.label}
-                                        </span>
-                                        <h3 className={styles.detailTitle}>
-                                            {selectedEvidence.title}
-                                        </h3>
-                                    </motion.div>
-
-                                    <div className={styles.detailGrid}>
-                                        <motion.div className={styles.leftColumn} variants={contentItem}>
-                                            <div className={styles.metadataBox}>
-                                                <h4 className={styles.sectionTitle}>METADATA</h4>
-                                                {Object.entries(selectedEvidence.metadata).map(
-                                                    ([key, value]) => (
-                                                        <div key={key} className={styles.metadataItem}>
-                                                            <span className={styles.metaKey}>{key}</span>
-                                                            <span className={styles.metaValue}>{value}</span>
-                                                        </div>
-                                                    )
-                                                )}
-                                            </div>
-
-                                            <div className={styles.tagsBox}>
-                                                <h4 className={styles.sectionTitle}>TAGS</h4>
-                                                <div className={styles.tagsList}>
-                                                    {selectedEvidence.tags.map((tag) => (
-                                                        <span key={tag} className={styles.tag}>
-                                                            {tag}
-                                                        </span>
-                                                    ))}
-                                                </div>
-                                            </div>
-                                        </motion.div>
-
-                                        <motion.div className={styles.rightColumn} variants={contentItem}>
-                                            <div
-                                                className={styles.imagePlaceholder}
-                                                style={{ background: `linear-gradient(135deg, ${selectedEvidence.color}22 0%, ${selectedEvidence.color}11 100%)` }}
-                                            >
-                                                <div className={styles.placeholderText}>
-                                                    Image Placeholder
-                                                </div>
-                                            </div>
-
-                                            <motion.div variants={contentItem}>
-                                                <h4 className={styles.sectionTitle}>MISSION REPORT</h4>
-                                                <p className={styles.description}>
-                                                    {selectedEvidence.description}
-                                                </p>
-                                            </motion.div>
-
-                                            <motion.div variants={contentItem}>
-                                                <h4 className={styles.sectionTitle}>TECHNICAL ANALYSIS</h4>
-                                                <p className={styles.description}>
-                                                    {selectedEvidence.technicalAnalysis}
-                                                </p>
-                                            </motion.div>
-                                        </motion.div>
-                                    </div>
-                                </motion.div>
-                            </motion.div>
-                        </div>
-                    </>
                 )}
             </AnimatePresence>
         </div>
