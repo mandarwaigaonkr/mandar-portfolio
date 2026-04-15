@@ -1,317 +1,449 @@
+/* ========================================
+   Module Index — Container & Header
+   ======================================== */
+
 .boardContainer {
     width: 100%;
-    background: var(--bg-root);
-    padding: var(--space-8) var(--space-6);
-    margin-top: calc(var(--space-8) * -1);
+    padding: var(--space-10) 0 0;
     position: relative;
-    z-index: 1;
+    z-index: 2;
 }
 
-/* Header */
+/* ── Header ── */
+
 .boardHeader {
     display: flex;
     justify-content: space-between;
-    align-items: center;
-    margin-bottom: var(--space-8);
-    flex-wrap: wrap;
-    gap: var(--space-4);
-}
-
-.titleSection {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-2);
+    align-items: flex-end;
+    padding: 0 var(--space-6);
+    margin-bottom: var(--space-4);
 }
 
 .boardTitle {
     margin: 0;
-    font-size: clamp(1.8rem, 4vw, 2.5rem);
+    font-size: clamp(2rem, 5vw, 3.2rem);
     font-weight: 700;
-    letter-spacing: 0.08em;
+    letter-spacing: 0.04em;
     color: var(--text-primary);
     font-family: var(--font-serif), serif;
+    line-height: 1;
 }
 
-.boardSubtitle {
-    margin: 0;
-    font-size: 0.85rem;
+.headerRight {
+    text-align: right;
+}
+
+.sectorLabel {
+    font-size: 0.72rem;
     letter-spacing: 0.1em;
     text-transform: uppercase;
-    color: var(--signal-primary);
+    color: var(--text-secondary);
     font-family: var(--font-mono), monospace;
+    line-height: 1.6;
     font-weight: 500;
 }
 
-/* View Toggle */
+/* ── Controls row ── */
+
+.controlsRow {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 var(--space-6);
+    margin-bottom: var(--space-5);
+    border-top: 1px solid rgba(127, 231, 214, 0.08);
+    padding-top: var(--space-4);
+}
+
 .viewToggle {
     display: flex;
-    gap: var(--space-2);
+    gap: 0;
 }
 
 .toggleBtn {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
     padding: var(--space-2) var(--space-4);
-    border: 1px solid rgba(127, 231, 214, 0.3);
+    border: 1px solid rgba(127, 231, 214, 0.2);
     background: transparent;
     color: var(--text-secondary);
-    font-size: 0.8rem;
+    font-size: 0.78rem;
     letter-spacing: 0.08em;
     font-family: var(--font-mono), monospace;
     cursor: none !important;
     transition: all 0.3s ease;
     text-transform: uppercase;
     font-weight: 500;
-    border-radius: 2px;
-    will-change: color, border-color;
+}
+
+.toggleBtn:first-child {
+    border-radius: 2px 0 0 2px;
+    border-right: none;
+}
+
+.toggleBtn:last-child {
+    border-radius: 0 2px 2px 0;
 }
 
 .toggleBtn:hover {
-    border-color: var(--signal-primary);
     color: var(--signal-primary);
+    border-color: rgba(127, 231, 214, 0.4);
 }
 
 .toggleBtn.active {
-    background: rgba(127, 231, 214, 0.1);
-    border-color: var(--signal-primary);
-    color: var(--signal-primary);
+    color: var(--signal-danger, #ff4444);
+    border-color: rgba(127, 231, 214, 0.35);
 }
 
-/* List Container */
-.listContainer {
-    min-height: 60vh;
+.toggleIcon {
+    font-size: 0.9rem;
 }
 
-.listContainer.slider {
-    padding: var(--space-4) 0;
-}
-
-.listContainer.list {
-    padding: var(--space-2) 0;
-}
-
-/* Slider View */
-.sliderWrapper {
-    position: relative;
-    overflow: hidden;
-}
-
-.slider {
+.navArrows {
     display: flex;
-    gap: var(--space-6);
-    overflow-x: auto;
-    padding: var(--space-2);
-    scroll-behavior: smooth;
-    scrollbar-width: thin;
-    scrollbar-color: rgba(127, 231, 214, 0.2) transparent;
+    gap: 0;
 }
 
-.slider::-webkit-scrollbar {
-    height: 8px;
-}
-
-.slider::-webkit-scrollbar-track {
+.navBtn {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid rgba(127, 231, 214, 0.2);
     background: transparent;
-}
-
-.slider::-webkit-scrollbar-thumb {
-    background: rgba(127, 231, 214, 0.2);
-    border-radius: 4px;
-}
-
-.slider::-webkit-scrollbar-thumb:hover {
-    background: rgba(127, 231, 214, 0.4);
-}
-
-/* Slider Card */
-.sliderCard {
-    flex-shrink: 0;
-    width: 280px;
-    cursor: none !important;
-    border-radius: var(--radius-panel);
-    overflow: hidden;
-    border: 1px solid rgba(127, 231, 214, 0.15);
-    background: rgba(5, 10, 15, 0.4);
-    transition: border-color 0.3s ease, background 0.3s ease;
-    will-change: border-color, background, transform;
-}
-
-.sliderCard:hover {
-    border-color: rgba(127, 231, 214, 0.4);
-    background: rgba(5, 10, 15, 0.6);
-}
-
-.cardImage {
-    width: 100%;
-    height: 160px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-    overflow: hidden;
-    border-radius: var(--radius-panel) var(--radius-panel) 0 0;
-}
-
-.cardImagePlaceholder {
-    font-size: 0.85rem;
-    letter-spacing: 0.08em;
-    color: rgba(255, 255, 255, 0.3);
-    font-family: var(--font-mono), monospace;
-    font-weight: 500;
-    text-transform: uppercase;
-}
-
-.cardContent {
-    padding: var(--space-4);
-}
-
-.cardLabel {
-    display: block;
-    font-size: 0.7rem;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--signal-danger);
-    font-family: var(--font-mono), monospace;
-    margin-bottom: var(--space-2);
-    font-weight: 600;
-}
-
-.cardTitle {
-    margin: 0 0 var(--space-1) 0;
-    font-size: 1.1rem;
-    font-weight: 700;
-    color: var(--text-primary);
-    font-family: var(--font-serif), serif;
-}
-
-.cardSubtitle {
-    margin: 0;
-    font-size: 0.85rem;
     color: var(--text-secondary);
-    font-family: var(--font-serif), serif;
-}
-
-.scrollIndicator {
-    text-align: center;
-    margin-top: var(--space-6);
-    font-size: 0.8rem;
-    letter-spacing: 0.08em;
-    color: var(--signal-primary);
-    font-family: var(--font-mono), monospace;
-    animation: pulse 2s ease-in-out infinite;
-}
-
-@keyframes pulse {
-
-    0%,
-    100% {
-        opacity: 0.5;
-    }
-
-    50% {
-        opacity: 1;
-    }
-}
-
-/* List View */
-.listWrapper {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-3);
-}
-
-.listItem {
-    display: flex;
-    align-items: center;
-    gap: var(--space-4);
-    padding: var(--space-4);
-    border: 1px solid rgba(127, 231, 214, 0.15);
-    background: rgba(5, 10, 15, 0.4);
-    border-radius: var(--radius-panel);
+    font-size: 1.3rem;
+    line-height: 1;
     cursor: none !important;
-    transition: border-color 0.3s ease, background 0.3s ease;
-    will-change: border-color, background, transform;
+    transition: all 0.25s ease;
+    padding: 0;
 }
 
-.listItem:hover {
+.navBtn:first-child {
+    border-radius: 2px 0 0 2px;
+    border-right: none;
+}
+
+.navBtn:last-child {
+    border-radius: 0 2px 2px 0;
+}
+
+.navBtn:hover {
+    background: rgba(127, 231, 214, 0.06);
+    color: var(--signal-primary);
     border-color: rgba(127, 231, 214, 0.4);
-    background: rgba(5, 10, 15, 0.6);
-}
-
-.listItemImage {
-    flex-shrink: 0;
-    width: 120px;
-    height: 100px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 4px;
-    overflow: hidden;
-}
-
-.listItemPlaceholder {
-    font-size: 0.75rem;
-    letter-spacing: 0.08em;
-    color: rgba(255, 255, 255, 0.3);
-    font-family: var(--font-mono), monospace;
-    font-weight: 500;
-    text-transform: uppercase;
-}
-
-.listItemContent {
-    flex: 1;
-    min-width: 0;
-}
-
-.listItemLabel {
-    display: block;
-    font-size: 0.7rem;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--signal-danger);
-    font-family: var(--font-mono), monospace;
-    margin-bottom: var(--space-1);
-    font-weight: 600;
-}
-
-.listItemTitle {
-    margin: 0 0 var(--space-1) 0;
-    font-size: 1.05rem;
-    font-weight: 700;
-    color: var(--text-primary);
-    font-family: var(--font-serif), serif;
-}
-
-.listItemSubtitle {
-    margin: 0 0 var(--space-2) 0;
-    font-size: 0.85rem;
-    color: var(--text-secondary);
-    font-family: var(--font-serif), serif;
-}
-
-.listItemYear {
-    display: inline-block;
-    font-size: 0.75rem;
-    color: var(--signal-primary);
-    font-family: var(--font-mono), monospace;
-    letter-spacing: 0.08em;
-    opacity: 0.7;
-}
-
-.listItemArrow {
-    flex-shrink: 0;
-    font-size: 1.2rem;
-    color: var(--signal-primary);
-    transition: transform 0.3s ease;
-}
-
-.listItem:hover .listItemArrow {
-    transform: translateX(4px);
 }
 
 /* ========================================
-   MODAL OVERLAY — Full-screen with blur
+   SLIDER VIEW
+   Flat horizontal scroll strip, all cards same size,
+   matching Killian Herzer reference layout.
    ======================================== */
 
-/* Backdrop: covers entire viewport, blurs everything behind */
+.sliderViewport {
+    position: relative;
+    width: 100%;
+}
+
+.sliderTrack {
+    display: flex;
+    gap: 12px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-behavior: smooth;
+    scroll-snap-type: x proximity;
+    padding: 0 var(--space-6);
+    padding-bottom: var(--space-6);
+
+    /* Hide scrollbar for a cleaner look */
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.sliderTrack::-webkit-scrollbar {
+    display: none;
+}
+
+/* ── Slider card ── */
+
+.sliderCard {
+    flex-shrink: 0;
+    width: clamp(180px, 14vw, 220px);
+    height: clamp(420px, 62vh, 580px);
+    position: relative;
+    cursor: none !important;
+    scroll-snap-align: start;
+    overflow: hidden;
+    border-radius: 0;
+    background: rgba(10, 14, 18, 0.9);
+    border: 1px solid rgba(127, 231, 214, 0.06);
+    display: flex;
+    flex-direction: column;
+    transition: border-color 0.35s ease;
+}
+
+.sliderCard:hover {
+    border-color: rgba(127, 231, 214, 0.18);
+}
+
+/* Red dot accent top-left */
+.sliderDotAccent {
+    position: absolute;
+    top: 14px;
+    left: 14px;
+    z-index: 4;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.sliderDotAccent span {
+    display: block;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: var(--signal-danger, #ff4444);
+    opacity: 0.9;
+}
+
+/* Vertical category label on right edge */
+.sliderCategoryVertical {
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%) rotate(90deg);
+    transform-origin: center center;
+    white-space: nowrap;
+    font-size: 0.6rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--signal-danger, #ff4444);
+    font-family: var(--font-mono), monospace;
+    font-weight: 600;
+    z-index: 4;
+    pointer-events: none;
+}
+
+/* Card media section — fills most of the card */
+.sliderMedia {
+    flex: 1 1 0%;
+    min-height: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.sliderMedia::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 60%;
+    background: linear-gradient(to top, rgba(5, 8, 12, 0.95), transparent);
+    pointer-events: none;
+    z-index: 1;
+}
+
+.sliderMediaLabel {
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+    color: rgba(255, 255, 255, 0.15);
+    font-family: var(--font-mono), monospace;
+    text-transform: uppercase;
+}
+
+/* Bottom info (label + title) */
+.sliderInfo {
+    padding: var(--space-3) var(--space-4) var(--space-4);
+    position: relative;
+    z-index: 2;
+    background: rgba(5, 8, 12, 0.95);
+}
+
+.sliderLabel {
+    display: block;
+    font-size: 0.6rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--signal-danger, #ff4444);
+    font-family: var(--font-mono), monospace;
+    font-weight: 600;
+    margin-bottom: 4px;
+}
+
+.sliderTitle {
+    margin: 0;
+    font-size: clamp(1rem, 1.8vw, 1.35rem);
+    font-weight: 700;
+    color: var(--text-primary);
+    font-family: var(--font-serif), serif;
+    line-height: 1.15;
+}
+
+/* ========================================
+   LIST VIEW
+   Full-width rows with background image fill,
+   dark overlay, label+title left, category+CTA right.
+   ======================================== */
+
+.listView {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 0 var(--space-6);
+}
+
+.listRow {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 130px;
+    padding: var(--space-5) var(--space-6);
+    cursor: none !important;
+    overflow: hidden;
+    transition: transform 0.35s ease;
+}
+
+.listRow:hover {
+    transform: translateX(4px);
+}
+
+/* Background image fills the entire row */
+.listRowBg {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    opacity: 0.12;
+    transition: opacity 0.5s ease;
+}
+
+.listRow:hover .listRowBg {
+    opacity: 0.22;
+}
+
+/* Dark overlay on top of the background */
+.listRowOverlay {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    background: linear-gradient(
+        90deg,
+        rgba(5, 8, 12, 0.82) 0%,
+        rgba(5, 8, 12, 0.4) 50%,
+        rgba(5, 8, 12, 0.7) 100%
+    );
+    border: 1px solid rgba(127, 231, 214, 0.06);
+    transition: border-color 0.35s ease;
+}
+
+.listRow:hover .listRowOverlay {
+    border-color: rgba(127, 231, 214, 0.12);
+}
+
+/* Left: accent dots + label + title */
+.listLeft {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+    position: relative;
+    z-index: 2;
+}
+
+.listDotAccent {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.listDotAccent span {
+    display: block;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: var(--signal-danger, #ff4444);
+    opacity: 0.9;
+}
+
+.listTextBlock {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.listLabel {
+    display: block;
+    font-size: 0.68rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--signal-danger, #ff4444);
+    font-family: var(--font-mono), monospace;
+    font-weight: 600;
+}
+
+.listTitle {
+    margin: 0;
+    font-size: clamp(1.3rem, 3vw, 2rem);
+    font-weight: 700;
+    color: var(--text-primary);
+    font-family: var(--font-serif), serif;
+    line-height: 1.1;
+}
+
+/* Right: category + CTA + arrow */
+.listRight {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+    position: relative;
+    z-index: 2;
+    white-space: nowrap;
+}
+
+.listCategory {
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+    font-family: var(--font-mono), monospace;
+    font-weight: 500;
+}
+
+.listCta {
+    font-size: 0.62rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+    font-family: var(--font-mono), monospace;
+    font-weight: 500;
+    opacity: 0;
+    transition: opacity 0.35s ease;
+}
+
+.listRow:hover .listCta {
+    opacity: 0.7;
+}
+
+.listArrow {
+    font-size: 1rem;
+    color: var(--text-secondary);
+    transition: transform 0.35s ease, color 0.35s ease;
+}
+
+.listRow:hover .listArrow {
+    transform: translateX(4px);
+    color: var(--signal-primary);
+}
+
+/* ========================================
+   Modal Overlay
+   ======================================== */
+
 .backdrop {
     position: fixed;
     inset: 0;
@@ -322,7 +454,6 @@
     pointer-events: auto;
 }
 
-/* Container: positions the modal content */
 .detailContainer {
     position: fixed;
     inset: 0;
@@ -400,6 +531,8 @@
     border-radius: 3px;
 }
 
+/* ── Detail content sections ── */
+
 .detailHeader {
     margin-bottom: var(--space-8);
 }
@@ -407,9 +540,9 @@
 .detailLabel {
     display: block;
     font-size: 0.75rem;
-    letter-spacing: 0.1em;
+    letter-spacing: 0.12em;
     text-transform: uppercase;
-    color: var(--signal-danger);
+    color: var(--signal-danger, #ff4444);
     font-family: var(--font-mono), monospace;
     margin-bottom: var(--space-3);
     font-weight: 600;
@@ -424,7 +557,6 @@
     line-height: 1.1;
 }
 
-/* Detail Grid */
 .detailGrid {
     display: grid;
     grid-template-columns: 1fr;
@@ -444,18 +576,6 @@
     gap: var(--space-6);
 }
 
-@media (max-width: 768px) {
-    .detailGrid {
-        grid-template-columns: 1fr;
-        gap: var(--space-6);
-    }
-
-    .leftColumn {
-        grid-template-columns: 1fr;
-    }
-}
-
-/* Metadata Box */
 .metadataBox,
 .tagsBox {
     border: 1px solid rgba(127, 231, 214, 0.15);
@@ -503,7 +623,6 @@
     text-align: right;
 }
 
-/* Tags */
 .tagsList {
     display: flex;
     flex-wrap: wrap;
@@ -529,17 +648,19 @@
     background: rgba(127, 231, 214, 0.15);
 }
 
-/* Image Placeholder */
 .imagePlaceholder {
     width: 100%;
     height: 450px;
     border: 1px solid rgba(127, 231, 214, 0.15);
-    background: linear-gradient(135deg, rgba(127, 231, 214, 0.08) 0%, rgba(143, 183, 255, 0.08) 100%);
+    background: linear-gradient(
+        135deg,
+        rgba(127, 231, 214, 0.08) 0%,
+        rgba(143, 183, 255, 0.08) 100%
+    );
     border-radius: var(--radius-panel);
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-bottom: 0;
     position: relative;
     overflow: hidden;
 }
@@ -548,23 +669,26 @@
     content: "";
     position: absolute;
     inset: 0;
-    background: radial-gradient(circle at center, rgba(127, 231, 214, 0.1) 0%, transparent 70%);
+    background: radial-gradient(
+        circle at center,
+        rgba(127, 231, 214, 0.1) 0%,
+        transparent 70%
+    );
     pointer-events: none;
 }
 
 .placeholderText {
     font-size: 1.1rem;
-    letter-spacing: 0.08em;
+    letter-spacing: 0.1em;
     color: var(--signal-primary);
     font-family: var(--font-mono), monospace;
-    opacity: 0.6;
+    opacity: 0.5;
     text-transform: uppercase;
     font-weight: 500;
     position: relative;
     z-index: 1;
 }
 
-/* Description and Analysis */
 .description {
     margin: 0;
     font-size: 0.95rem;
@@ -573,10 +697,50 @@
     font-family: var(--font-serif), serif;
 }
 
-/* Responsive */
+/* ========================================
+   Responsive
+   ======================================== */
+
 @media (max-width: 768px) {
     .boardContainer {
-        padding: var(--space-6) var(--space-4);
+        padding: var(--space-6) 0 0;
+    }
+
+    .boardHeader {
+        padding: 0 var(--space-4);
+    }
+
+    .controlsRow {
+        padding: 0 var(--space-4);
+    }
+
+    .sliderTrack {
+        padding: 0 var(--space-4);
+        gap: 8px;
+    }
+
+    .sliderCard {
+        width: clamp(150px, 40vw, 200px);
+        height: clamp(300px, 50vh, 420px);
+    }
+
+    .listView {
+        padding: 0 var(--space-4);
+    }
+
+    .listRow {
+        min-height: 100px;
+        padding: var(--space-4);
+    }
+
+    .listRight {
+        flex-direction: column;
+        align-items: flex-end;
+        gap: var(--space-2);
+    }
+
+    .listCta {
+        display: none;
     }
 
     .detailContainer {
@@ -588,31 +752,9 @@
         max-height: 95vh;
     }
 
-    .boardHeader {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-
-    .sliderCard {
-        width: 240px;
-    }
-
-    .listItem {
-        flex-direction: column;
-        text-align: center;
-    }
-
-    .listItemImage {
-        width: 100%;
-        height: 150px;
-    }
-
-    .listItemArrow {
-        display: none;
-    }
-
-    .slider {
-        gap: var(--space-4);
+    .detailGrid,
+    .leftColumn {
+        grid-template-columns: 1fr;
     }
 
     .imagePlaceholder {
