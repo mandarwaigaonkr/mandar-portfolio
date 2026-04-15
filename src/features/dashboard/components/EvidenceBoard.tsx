@@ -123,22 +123,16 @@ const EVIDENCE_DATA: Evidence[] = [
 ];
 
 /* ─── Animation presets ─── */
-const overlayTransition = {
-    type: "spring" as const,
-    damping: 30,
-    stiffness: 300,
-    mass: 0.8,
-};
 
 const contentStagger = {
     hidden: { opacity: 0 },
     visible: {
         opacity: 1,
-        transition: { staggerChildren: 0.04, delayChildren: 0.15 },
+        transition: { staggerChildren: 0.05, delayChildren: 0.12 },
     },
     exit: {
         opacity: 0,
-        transition: { staggerChildren: 0.02, staggerDirection: -1 },
+        transition: { duration: 0.2 },
     },
 };
 
@@ -154,7 +148,7 @@ const contentItem = {
         opacity: 0,
         y: -8,
         filter: "blur(4px)",
-        transition: { duration: 0.15 },
+        transition: { duration: 0.12 },
     },
 };
 
@@ -163,6 +157,7 @@ export function EvidenceBoard() {
     const [viewMode, setViewMode] = useState<ViewMode>("slider");
     const [selectedId, setSelectedId] = useState<string | null>(null);
     const scrollRef = useRef<HTMLDivElement>(null);
+    const savedScrollY = useRef(0);
 
     const selectedEvidence = selectedId
         ? EVIDENCE_DATA.find((e) => e.id === selectedId)
@@ -180,32 +175,25 @@ export function EvidenceBoard() {
 
     /* ── Scroll lock for modal ── */
     useEffect(() => {
-        if (selectedEvidence) {
-            const scrollY = window.scrollY;
+        if (selectedId) {
+            // Save current scroll position before locking
+            savedScrollY.current = window.scrollY;
             document.body.style.position = "fixed";
-            document.body.style.top = `-${scrollY}px`;
+            document.body.style.top = `-${savedScrollY.current}px`;
             document.body.style.left = "0";
             document.body.style.right = "0";
             document.body.style.overflow = "hidden";
         } else {
-            const scrollY = document.body.style.top;
+            // Restore scroll position — uses the ref, not parsed CSS
+            const y = savedScrollY.current;
             document.body.style.position = "";
             document.body.style.top = "";
             document.body.style.left = "";
             document.body.style.right = "";
             document.body.style.overflow = "";
-            if (scrollY) {
-                window.scrollTo(0, parseInt(scrollY || "0") * -1);
-            }
+            window.scrollTo(0, y);
         }
-        return () => {
-            document.body.style.position = "";
-            document.body.style.top = "";
-            document.body.style.left = "";
-            document.body.style.right = "";
-            document.body.style.overflow = "";
-        };
-    }, [selectedEvidence]);
+    }, [selectedId]);
 
     /* ── Escape to close modal ── */
     useEffect(() => {
@@ -277,23 +265,22 @@ export function EvidenceBoard() {
                     <motion.div
                         key="slider"
                         className={styles.sliderViewport}
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        transition={{ duration: 0.35 }}
+                        initial={{ opacity: 0, y: 12 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -8 }}
+                        transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
                     >
                         <div className={styles.sliderTrack} ref={scrollRef}>
                             {EVIDENCE_DATA.map((item, idx) => (
                                 <motion.div
                                     key={item.id}
                                     className={styles.sliderCard}
-                                    layoutId={`card-container-${item.id}`}
                                     onClick={() => setSelectedId(item.id)}
                                     initial={{ opacity: 0, y: 30 }}
                                     animate={{ opacity: 1, y: 0 }}
                                     transition={{
                                         delay: idx * 0.06,
-                                        duration: 0.5,
+                                        duration: 0.45,
                                         ease: [0.22, 1, 0.36, 1],
                                     }}
                                     whileHover={{ y: -6 }}
@@ -311,28 +298,21 @@ export function EvidenceBoard() {
                                     </div>
 
                                     {/* Card image area */}
-                                    <motion.div
-                                        layoutId={`card-image-${item.id}`}
+                                    <div
                                         className={styles.sliderMedia}
                                         style={{ background: item.color }}
                                     >
                                         <div className={styles.sliderMediaLabel}>IMAGE</div>
-                                    </motion.div>
+                                    </div>
 
                                     {/* Bottom info */}
                                     <div className={styles.sliderInfo}>
-                                        <motion.span
-                                            layoutId={`card-label-${item.id}`}
-                                            className={styles.sliderLabel}
-                                        >
+                                        <span className={styles.sliderLabel}>
                                             {item.label}
-                                        </motion.span>
-                                        <motion.h3
-                                            layoutId={`card-title-${item.id}`}
-                                            className={styles.sliderTitle}
-                                        >
+                                        </span>
+                                        <h3 className={styles.sliderTitle}>
                                             {item.title}
-                                        </motion.h3>
+                                        </h3>
                                     </div>
                                 </motion.div>
                             ))}
@@ -343,19 +323,18 @@ export function EvidenceBoard() {
                     <motion.div
                         key="list"
                         className={styles.listView}
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        transition={{ duration: 0.35 }}
+                        initial={{ opacity: 0, y: 12 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -8 }}
+                        transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
                     >
                         {EVIDENCE_DATA.map((item, idx) => (
                             <motion.div
                                 key={item.id}
-                                layoutId={`card-container-${item.id}`}
                                 className={styles.listRow}
                                 onClick={() => setSelectedId(item.id)}
-                                initial={{ opacity: 0, y: 20 }}
-                                animate={{ opacity: 1, y: 0 }}
+                                initial={{ opacity: 0, x: -20 }}
+                                animate={{ opacity: 1, x: 0 }}
                                 transition={{
                                     delay: idx * 0.06,
                                     duration: 0.4,
@@ -363,8 +342,7 @@ export function EvidenceBoard() {
                                 }}
                             >
                                 {/* Background image placeholder */}
-                                <motion.div
-                                    layoutId={`card-image-${item.id}`}
+                                <div
                                     className={styles.listRowBg}
                                     style={{ background: item.color }}
                                 />
@@ -378,18 +356,12 @@ export function EvidenceBoard() {
                                         <span />
                                     </div>
                                     <div className={styles.listTextBlock}>
-                                        <motion.span
-                                            layoutId={`card-label-${item.id}`}
-                                            className={styles.listLabel}
-                                        >
+                                        <span className={styles.listLabel}>
                                             {item.label}
-                                        </motion.span>
-                                        <motion.h4
-                                            layoutId={`card-title-${item.id}`}
-                                            className={styles.listTitle}
-                                        >
+                                        </span>
+                                        <h4 className={styles.listTitle}>
                                             {item.title}
-                                        </motion.h4>
+                                        </h4>
                                     </div>
                                 </div>
 
@@ -414,16 +386,23 @@ export function EvidenceBoard() {
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
                             exit={{ opacity: 0 }}
-                            transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+                            transition={{ duration: 0.25 }}
                             onClick={handleClose}
                         />
 
                         <div className={styles.detailContainer} onClick={handleClose}>
                             <motion.div
-                                layoutId={`card-container-${selectedEvidence.id}`}
                                 className={styles.detailContent}
                                 onClick={(e) => e.stopPropagation()}
-                                transition={overlayTransition}
+                                initial={{ opacity: 0, scale: 0.96, y: 20 }}
+                                animate={{ opacity: 1, scale: 1, y: 0 }}
+                                exit={{ opacity: 0, scale: 0.97, y: 10 }}
+                                transition={{
+                                    type: "spring",
+                                    damping: 28,
+                                    stiffness: 280,
+                                    mass: 0.8,
+                                }}
                             >
                                 <button className={styles.backBtn} onClick={handleClose}>
                                     ← BACK
@@ -436,18 +415,12 @@ export function EvidenceBoard() {
                                     exit="exit"
                                 >
                                     <motion.div className={styles.detailHeader} variants={contentItem}>
-                                        <motion.span
-                                            layoutId={`card-label-${selectedEvidence.id}`}
-                                            className={styles.detailLabel}
-                                        >
+                                        <span className={styles.detailLabel}>
                                             {selectedEvidence.label}
-                                        </motion.span>
-                                        <motion.h3
-                                            layoutId={`card-title-${selectedEvidence.id}`}
-                                            className={styles.detailTitle}
-                                        >
+                                        </span>
+                                        <h3 className={styles.detailTitle}>
                                             {selectedEvidence.title}
-                                        </motion.h3>
+                                        </h3>
                                     </motion.div>
 
                                     <div className={styles.detailGrid}>
@@ -477,15 +450,14 @@ export function EvidenceBoard() {
                                         </motion.div>
 
                                         <motion.div className={styles.rightColumn} variants={contentItem}>
-                                            <motion.div
-                                                layoutId={`card-image-${selectedEvidence.id}`}
+                                            <div
                                                 className={styles.imagePlaceholder}
-                                                transition={overlayTransition}
+                                                style={{ background: `linear-gradient(135deg, ${selectedEvidence.color}22 0%, ${selectedEvidence.color}11 100%)` }}
                                             >
                                                 <div className={styles.placeholderText}>
                                                     Image Placeholder
                                                 </div>
-                                            </motion.div>
+                                            </div>
 
                                             <motion.div variants={contentItem}>
                                                 <h4 className={styles.sectionTitle}>MISSION REPORT</h4>
@@ -511,3 +483,4 @@ export function EvidenceBoard() {
         </div>
     );
 }
+
