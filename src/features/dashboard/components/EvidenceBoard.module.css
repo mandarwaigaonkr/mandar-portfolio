@@ -100,106 +100,179 @@
     font-size: 0.9rem;
 }
 
-.navArrows {
-    display: flex;
-    gap: 0;
-}
-
-.navBtn {
-    width: 40px;
-    height: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border: 1px solid rgba(127, 231, 214, 0.2);
-    background: transparent;
-    color: var(--text-secondary);
-    font-size: 1.3rem;
-    line-height: 1;
-    cursor: none !important;
-    transition: all 0.25s ease;
-    padding: 0;
-}
-
-.navBtn:first-child {
-    border-radius: 2px 0 0 2px;
-    border-right: none;
-}
-
-.navBtn:last-child {
-    border-radius: 0 2px 2px 0;
-}
-
-.navBtn:hover {
-    background: rgba(127, 231, 214, 0.06);
-    color: var(--signal-primary);
-    border-color: rgba(127, 231, 214, 0.4);
-}
 
 /* ========================================
-   SLIDER VIEW
-   Flat horizontal scroll strip, all cards same size,
-   matching Killian Herzer reference layout.
+   ACCORDION SLIDER VIEW
+   Expanding column gallery — flex-based
+   weighted layout with elastic push-pull.
    ======================================== */
 
-.sliderViewport {
-    position: relative;
+.accordionViewport {
+    display: flex;
     width: 100%;
-}
-
-.sliderTrack {
-    display: flex;
-    gap: 12px;
-    overflow-x: auto;
-    overflow-y: hidden;
-    scroll-behavior: smooth;
-    scroll-snap-type: x proximity;
-    padding: 0 var(--space-6);
-    padding-bottom: var(--space-6);
-
-    /* Hide scrollbar for a cleaner look */
-    scrollbar-width: none;
-    -ms-overflow-style: none;
-}
-
-.sliderTrack::-webkit-scrollbar {
-    display: none;
-}
-
-/* ── Slider card ── */
-
-.sliderCard {
-    flex-shrink: 0;
-    width: clamp(180px, 14vw, 220px);
-    height: clamp(420px, 62vh, 580px);
-    position: relative;
-    cursor: none !important;
-    scroll-snap-align: start;
+    height: clamp(450px, 65vh, 620px);
     overflow: hidden;
-    border-radius: 0;
-    background: rgba(10, 14, 18, 0.9);
+    gap: 10px;
+    padding: 0 var(--space-6);
+}
+
+/* ── Each column ── */
+.accordionColumn {
+    position: relative;
+    flex: 1 1 0%;
+    min-width: 0;
+    overflow: hidden;
+    cursor: none !important;
+    background: rgba(5, 8, 12, 0.95);
     border: 1px solid rgba(127, 231, 214, 0.06);
-    display: flex;
-    flex-direction: column;
-    transition: border-color 0.35s ease;
+    border-radius: 6px;
+
+    /* The magic: GPU-accelerated flex transition with expo easing */
+    transition:
+        flex 0.65s cubic-bezier(0.16, 1, 0.3, 1),
+        border-color 0.4s ease;
+    will-change: flex;
 }
 
-.sliderCard:hover {
-    border-color: rgba(127, 231, 214, 0.18);
+/* ── Active (hovered) column — expands to ~3.5x ── */
+.accordionActive {
+    flex: 1.6 1 0%;
+    border-color: rgba(127, 231, 214, 0.15);
 }
 
-/* Red dot accent top-left */
-.sliderDotAccent {
+/* ── Compressed (sibling) column ── */
+.accordionCompressed {
+    flex: 0.85 1 0%;
+}
+
+/* ── Background fill ── */
+.colBg {
     position: absolute;
-    top: 14px;
-    left: 14px;
+    inset: 0;
+    z-index: 0;
+    opacity: 0.06;
+    transition: opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.accordionActive .colBg {
+    opacity: 0.14;
+}
+
+.accordionCompressed .colBg {
+    opacity: 0.03;
+}
+
+/* Dark overlay */
+.colOverlay {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    background: linear-gradient(
+        180deg,
+        rgba(5, 8, 12, 0.3) 0%,
+        rgba(5, 8, 12, 0.5) 40%,
+        rgba(5, 8, 12, 0.88) 100%
+    );
+    transition: background 0.65s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.accordionActive .colOverlay {
+    background: linear-gradient(
+        180deg,
+        rgba(5, 8, 12, 0.15) 0%,
+        rgba(5, 8, 12, 0.25) 40%,
+        rgba(5, 8, 12, 0.85) 100%
+    );
+}
+
+/* ── Scan line — horizontal sweep on active ── */
+.scanLine {
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 1px;
+    z-index: 6;
+    background: linear-gradient(
+        90deg,
+        transparent 0%,
+        rgba(255, 145, 120, 0.6) 20%,
+        rgba(255, 145, 120, 0.9) 50%,
+        rgba(255, 145, 120, 0.6) 80%,
+        transparent 100%
+    );
+    opacity: 0;
+    top: 30%;
+    transition:
+        opacity 0.3s ease,
+        top 1.8s cubic-bezier(0.16, 1, 0.3, 1);
+    pointer-events: none;
+}
+
+.accordionActive .scanLine {
+    opacity: 1;
+    top: 75%;
+}
+
+/* ── Corner framing brackets ── */
+.cornerBrackets {
+    position: absolute;
+    inset: 0;
+    z-index: 5;
+    pointer-events: none;
+}
+
+.bracket {
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    opacity: 0;
+    transition: opacity 0.35s ease 0.15s;
+}
+
+.accordionActive .bracket {
+    opacity: 1;
+}
+
+.bracketTL {
+    top: 12px;
+    left: 12px;
+    border-top: 2px solid var(--signal-primary);
+    border-left: 2px solid var(--signal-primary);
+}
+
+.bracketTR {
+    top: 12px;
+    right: 12px;
+    border-top: 2px solid var(--signal-primary);
+    border-right: 2px solid var(--signal-primary);
+}
+
+.bracketBL {
+    bottom: 12px;
+    left: 12px;
+    border-bottom: 2px solid var(--signal-primary);
+    border-left: 2px solid var(--signal-primary);
+}
+
+.bracketBR {
+    bottom: 12px;
+    right: 12px;
+    border-bottom: 2px solid var(--signal-primary);
+    border-right: 2px solid var(--signal-primary);
+}
+
+/* ── Red dot accent ── */
+.colDots {
+    position: absolute;
+    top: 16px;
+    left: 16px;
     z-index: 4;
     display: flex;
     flex-direction: column;
     gap: 3px;
 }
 
-.sliderDotAccent span {
+.colDots span {
     display: block;
     width: 4px;
     height: 4px;
@@ -208,15 +281,34 @@
     opacity: 0.9;
 }
 
-/* Vertical category label on right edge */
-.sliderCategoryVertical {
+/* ── Status code / VTX tracker ── */
+.colStatusCode {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    z-index: 4;
+    font-size: 0.58rem;
+    letter-spacing: 0.1em;
+    color: var(--signal-danger, #ff4444);
+    font-family: var(--font-mono), monospace;
+    font-weight: 600;
+    opacity: 0;
+    transition: opacity 0.3s ease 0.2s;
+}
+
+.accordionActive .colStatusCode {
+    opacity: 0.8;
+}
+
+/* ── Vertical category label ── */
+.colCategoryVertical {
     position: absolute;
     top: 50%;
-    right: 10px;
+    right: 12px;
     transform: translateY(-50%) rotate(90deg);
     transform-origin: center center;
     white-space: nowrap;
-    font-size: 0.6rem;
+    font-size: 0.58rem;
     letter-spacing: 0.18em;
     text-transform: uppercase;
     color: var(--signal-danger, #ff4444);
@@ -224,50 +316,41 @@
     font-weight: 600;
     z-index: 4;
     pointer-events: none;
+    opacity: 0.5;
+    transition: opacity 0.4s ease;
 }
 
-/* Card media section — fills most of the card */
-.sliderMedia {
-    flex: 1 1 0%;
-    min-height: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-    overflow: hidden;
+.accordionActive .colCategoryVertical {
+    opacity: 0;
 }
 
-.sliderMedia::after {
-    content: "";
+.accordionCompressed .colCategoryVertical {
+    opacity: 0.3;
+}
+
+/* ── Compressed content — visible when NOT active ── */
+.colCompressedContent {
     position: absolute;
     bottom: 0;
     left: 0;
     right: 0;
-    height: 60%;
-    background: linear-gradient(to top, rgba(5, 8, 12, 0.95), transparent);
+    z-index: 3;
+    padding: var(--space-4);
+    opacity: 1;
+    transition:
+        opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+        transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.accordionActive .colCompressedContent {
+    opacity: 0;
+    transform: translateY(10px);
     pointer-events: none;
-    z-index: 1;
 }
 
-.sliderMediaLabel {
-    font-size: 0.75rem;
-    letter-spacing: 0.1em;
-    color: rgba(255, 255, 255, 0.15);
-    font-family: var(--font-mono), monospace;
-    text-transform: uppercase;
-}
-
-/* Bottom info (label + title) */
-.sliderInfo {
-    padding: var(--space-3) var(--space-4) var(--space-4);
-    position: relative;
-    z-index: 2;
-    background: rgba(5, 8, 12, 0.95);
-}
-
-.sliderLabel {
+.colLabel {
     display: block;
-    font-size: 0.6rem;
+    font-size: 0.58rem;
     letter-spacing: 0.14em;
     text-transform: uppercase;
     color: var(--signal-danger, #ff4444);
@@ -276,14 +359,140 @@
     margin-bottom: 4px;
 }
 
-.sliderTitle {
+.colTitle {
     margin: 0;
-    font-size: clamp(1rem, 1.8vw, 1.35rem);
+    font-size: clamp(0.85rem, 1.5vw, 1.1rem);
     font-weight: 700;
     color: var(--text-primary);
     font-family: var(--font-serif), serif;
-    line-height: 1.15;
+    line-height: 1.2;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
+
+/* ── Expanded content — revealed on hover ── */
+.colExpandedContent {
+    position: absolute;
+    inset: 0;
+    z-index: 3;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: var(--space-6);
+    padding-top: 48px;
+    opacity: 0;
+    transform: translateY(8px);
+    transition:
+        opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1) 0.08s,
+        transform 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.08s;
+    pointer-events: none;
+}
+
+.accordionActive .colExpandedContent {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+}
+
+.colExpandedTop {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.colExpandedTitle {
+    margin: 0;
+    font-size: clamp(1.6rem, 3vw, 2.4rem);
+    font-weight: 700;
+    color: var(--text-primary);
+    font-family: var(--font-serif), serif;
+    line-height: 1.05;
+}
+
+.colSubtitle {
+    margin: 0;
+    font-size: 0.82rem;
+    letter-spacing: 0.06em;
+    color: var(--text-secondary);
+    font-family: var(--font-mono), monospace;
+    text-transform: uppercase;
+}
+
+/* ── Diagnostic panel (mid-section) ── */
+.colExpandedMid {
+    flex: 1;
+    display: flex;
+    align-items: flex-end;
+    padding-bottom: var(--space-4);
+}
+
+.colDiagnostic {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    width: 100%;
+    max-width: 280px;
+    padding: var(--space-3);
+    border: 1px solid rgba(127, 231, 214, 0.15);
+    background: rgba(5, 8, 12, 0.6);
+    backdrop-filter: blur(8px);
+}
+
+.diagLine {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--space-3);
+}
+
+.diagKey {
+    font-size: 0.62rem;
+    letter-spacing: 0.1em;
+    color: var(--signal-primary);
+    font-family: var(--font-mono), monospace;
+    font-weight: 600;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
+.diagVal {
+    font-size: 0.62rem;
+    letter-spacing: 0.06em;
+    color: var(--text-secondary);
+    font-family: var(--font-mono), monospace;
+    text-align: right;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* ── CTA at bottom ── */
+.colExpandedBottom {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.colCta {
+    font-size: 0.72rem;
+    letter-spacing: 0.12em;
+    color: var(--signal-primary);
+    font-family: var(--font-mono), monospace;
+    font-weight: 600;
+    text-transform: uppercase;
+    opacity: 0;
+    transform: translateY(6px);
+    transition:
+        opacity 0.3s ease 0.25s,
+        transform 0.3s ease 0.25s;
+}
+
+.accordionActive .colCta {
+    opacity: 1;
+    transform: translateY(0);
+}
+
 
 /* ========================================
    LIST VIEW
@@ -714,14 +923,29 @@
         padding: 0 var(--space-4);
     }
 
-    .sliderTrack {
-        padding: 0 var(--space-4);
-        gap: 8px;
+    /* Accordion goes vertical on mobile */
+    .accordionViewport {
+        flex-direction: column;
+        height: auto;
+        gap: 4px;
     }
 
-    .sliderCard {
-        width: clamp(150px, 40vw, 200px);
-        height: clamp(300px, 50vh, 420px);
+    .accordionColumn {
+        flex: none !important;
+        height: 80px;
+        transition: height 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .accordionActive {
+        height: 320px;
+    }
+
+    .colCategoryVertical {
+        transform: none;
+        position: absolute;
+        top: auto;
+        right: var(--space-4);
+        bottom: var(--space-3);
     }
 
     .listView {

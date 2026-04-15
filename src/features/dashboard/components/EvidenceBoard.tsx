@@ -22,6 +22,7 @@ interface Evidence {
     technicalAnalysis: string;
     image?: string;
     color: string;
+    statusCode: string;
 }
 
 const EVIDENCE_DATA: Evidence[] = [
@@ -48,6 +49,7 @@ const EVIDENCE_DATA: Evidence[] = [
         technicalAnalysis:
             "Custom motion tracking pipeline using depth sensors and WebGL visualization. Real-time particle system with 60fps performance optimization.",
         color: "#7fe7d6",
+        statusCode: "VTX-0091",
     },
     {
         id: "2",
@@ -72,6 +74,7 @@ const EVIDENCE_DATA: Evidence[] = [
         technicalAnalysis:
             "Three.js implementation with custom shader development. GLSL post-processing for dynamic visual effects. Optimized for cross-browser performance.",
         color: "#a8e6ff",
+        statusCode: "VTX-0147",
     },
     {
         id: "3",
@@ -96,6 +99,7 @@ const EVIDENCE_DATA: Evidence[] = [
         technicalAnalysis:
             "Component architecture using React + Framer Motion. CSS variable theming system with dynamic color management. Performance monitoring and optimization suite.",
         color: "#7fe7d6",
+        statusCode: "VTX-0203",
     },
     {
         id: "4",
@@ -119,6 +123,82 @@ const EVIDENCE_DATA: Evidence[] = [
         technicalAnalysis:
             "Built reusable component library. Implemented responsive design patterns. Optimized bundle size and improved Lighthouse scores by 35%.",
         color: "#a8e6ff",
+        statusCode: "VTX-0312",
+    },
+    {
+        id: "5",
+        type: "project",
+        title: "H.A.N.D.S.",
+        subtitle: "Motion Tracking",
+        label: "MODULE #05",
+        category: "AI / ML",
+        year: "2025",
+        client: "Research Lab",
+        duration: "5 months",
+        tags: ["AI", "Computer Vision", "Python"],
+        metadata: {
+            TYPE: "Research Project",
+            APPROACH: "Machine Learning",
+            CLIENT: "Research Lab",
+            TIMELINE: "Feb - Jun 2025",
+            STATUS: "In Progress",
+        },
+        description:
+            "Hand gesture recognition system using deep learning and computer vision. Real-time tracking pipeline with sub-10ms latency for interactive applications.",
+        technicalAnalysis:
+            "MediaPipe + custom TensorFlow model. WebSocket streaming for real-time inference. Optimized ONNX runtime for edge deployment.",
+        color: "#8fb7ff",
+        statusCode: "VTX-0408",
+    },
+    {
+        id: "6",
+        type: "project",
+        title: "Noctis",
+        subtitle: "Dark Interface",
+        label: "MODULE #06",
+        category: "UI/UX DESIGN",
+        year: "2024",
+        client: "Fintech Startup",
+        duration: "2 months",
+        tags: ["UI/UX", "Dark Mode", "Fintech"],
+        metadata: {
+            TYPE: "Interface Design",
+            APPROACH: "Dark-first Design",
+            CLIENT: "Fintech Partner",
+            TIMELINE: "Aug - Sep 2024",
+            STATUS: "Completed",
+        },
+        description:
+            "A dark-first interface design system for a fintech analytics dashboard. Focuses on data density, accessibility, and visual hierarchy in low-light environments.",
+        technicalAnalysis:
+            "Figma design system with 200+ components. CSS custom property theming. WCAG AA contrast ratios across all dark palettes.",
+        color: "#f2c56b",
+        statusCode: "VTX-0519",
+    },
+    {
+        id: "7",
+        type: "report",
+        title: "Parallax Engine",
+        subtitle: "Scroll Framework",
+        label: "MODULE #07",
+        category: "OPEN SOURCE",
+        year: "2025",
+        client: "Community",
+        duration: "Ongoing",
+        tags: ["TypeScript", "Animation", "Open Source"],
+        metadata: {
+            TYPE: "Library",
+            APPROACH: "Performance-first",
+            CLIENT: "Open Source",
+            TIMELINE: "2025 - Present",
+            STATUS: "Active",
+        },
+        description:
+            "A lightweight, GPU-accelerated parallax scrolling engine. Zero dependencies, ~3KB gzipped, with support for intersection-based lazy activation.",
+        technicalAnalysis:
+            "requestAnimationFrame loop with IntersectionObserver gating. CSS transform-only animations for compositor-friendly rendering. Ships as ESM + CJS.",
+        color: "#ff9178",
+        statusCode: "VTX-0627",
     },
 ];
 
@@ -156,27 +236,16 @@ const contentItem = {
 export function EvidenceBoard() {
     const [viewMode, setViewMode] = useState<ViewMode>("slider");
     const [selectedId, setSelectedId] = useState<string | null>(null);
-    const scrollRef = useRef<HTMLDivElement>(null);
+    const [hoveredId, setHoveredId] = useState<string | null>(null);
     const savedScrollY = useRef(0);
 
     const selectedEvidence = selectedId
         ? EVIDENCE_DATA.find((e) => e.id === selectedId)
         : null;
 
-    /* ── Arrow navigation for slider ── */
-    const scrollBy = useCallback((direction: number) => {
-        if (!scrollRef.current) return;
-        const cardWidth = scrollRef.current.querySelector(`.${styles.sliderCard}`)?.clientWidth ?? 220;
-        scrollRef.current.scrollBy({
-            left: direction * (cardWidth + 12),
-            behavior: "smooth",
-        });
-    }, []);
-
     /* ── Scroll lock for modal ── */
     useEffect(() => {
         if (selectedId) {
-            // Save current scroll position before locking
             savedScrollY.current = window.scrollY;
             document.body.style.position = "fixed";
             document.body.style.top = `-${savedScrollY.current}px`;
@@ -184,7 +253,6 @@ export function EvidenceBoard() {
             document.body.style.right = "0";
             document.body.style.overflow = "hidden";
         } else {
-            // Restore scroll position — uses the ref, not parsed CSS
             const y = savedScrollY.current;
             document.body.style.position = "";
             document.body.style.top = "";
@@ -237,86 +305,110 @@ export function EvidenceBoard() {
                         <span className={styles.toggleIcon}>≡</span> LIST
                     </button>
                 </div>
-
-                {viewMode === "slider" && (
-                    <div className={styles.navArrows}>
-                        <button
-                            className={styles.navBtn}
-                            onClick={() => scrollBy(-1)}
-                            aria-label="Previous"
-                        >
-                            ‹
-                        </button>
-                        <button
-                            className={styles.navBtn}
-                            onClick={() => scrollBy(1)}
-                            aria-label="Next"
-                        >
-                            ›
-                        </button>
-                    </div>
-                )}
             </div>
 
             {/* ── View content ── */}
             <AnimatePresence mode="wait">
                 {viewMode === "slider" ? (
-                    /* ════════ SLIDER VIEW ════════ */
+                    /* ════════ ACCORDION SLIDER VIEW ════════ */
                     <motion.div
                         key="slider"
-                        className={styles.sliderViewport}
+                        className={styles.accordionViewport}
                         initial={{ opacity: 0, y: 12 }}
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: -8 }}
                         transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+                        onMouseLeave={() => setHoveredId(null)}
                     >
-                        <div className={styles.sliderTrack} ref={scrollRef}>
-                            {EVIDENCE_DATA.map((item, idx) => (
+                        {EVIDENCE_DATA.map((item, idx) => {
+                            const isActive = hoveredId === item.id;
+                            const isCompressed = hoveredId !== null && hoveredId !== item.id;
+
+                            return (
                                 <motion.div
                                     key={item.id}
-                                    className={styles.sliderCard}
+                                    className={`${styles.accordionColumn} ${isActive ? styles.accordionActive : ""} ${isCompressed ? styles.accordionCompressed : ""}`}
+                                    onMouseEnter={() => setHoveredId(item.id)}
                                     onClick={() => setSelectedId(item.id)}
                                     initial={{ opacity: 0, y: 30 }}
                                     animate={{ opacity: 1, y: 0 }}
                                     transition={{
-                                        delay: idx * 0.06,
-                                        duration: 0.45,
+                                        delay: idx * 0.05,
+                                        duration: 0.5,
                                         ease: [0.22, 1, 0.36, 1],
                                     }}
-                                    whileHover={{ y: -6 }}
                                 >
-                                    {/* Vertical category label on right edge */}
-                                    <span className={styles.sliderCategoryVertical}>
+                                    {/* Background color fill */}
+                                    <div
+                                        className={styles.colBg}
+                                        style={{ background: item.color }}
+                                    />
+                                    <div className={styles.colOverlay} />
+
+                                    {/* Scan line FUI effect */}
+                                    <div className={styles.scanLine} />
+
+                                    {/* Corner framing brackets — visible on active */}
+                                    <div className={styles.cornerBrackets}>
+                                        <span className={`${styles.bracket} ${styles.bracketTL}`} />
+                                        <span className={`${styles.bracket} ${styles.bracketTR}`} />
+                                        <span className={`${styles.bracket} ${styles.bracketBL}`} />
+                                        <span className={`${styles.bracket} ${styles.bracketBR}`} />
+                                    </div>
+
+                                    {/* Red dot accent */}
+                                    <div className={styles.colDots}>
+                                        <span />
+                                        <span />
+                                        <span />
+                                    </div>
+
+                                    {/* Status code tracker */}
+                                    <span className={styles.colStatusCode}>{item.statusCode}</span>
+
+                                    {/* Vertical category — always visible, rotated */}
+                                    <span className={styles.colCategoryVertical}>
                                         {item.category}
                                     </span>
 
-                                    {/* Red dot accent */}
-                                    <div className={styles.sliderDotAccent}>
-                                        <span />
-                                        <span />
-                                        <span />
+                                    {/* Compressed: just label + title vertically */}
+                                    <div className={styles.colCompressedContent}>
+                                        <span className={styles.colLabel}>{item.label}</span>
+                                        <h3 className={styles.colTitle}>{item.title}</h3>
                                     </div>
 
-                                    {/* Card image area */}
-                                    <div
-                                        className={styles.sliderMedia}
-                                        style={{ background: item.color }}
-                                    >
-                                        <div className={styles.sliderMediaLabel}>IMAGE</div>
-                                    </div>
+                                    {/* Expanded: full reveal content */}
+                                    <div className={styles.colExpandedContent}>
+                                        <div className={styles.colExpandedTop}>
+                                            <span className={styles.colLabel}>{item.label}</span>
+                                            <h3 className={styles.colExpandedTitle}>{item.title}</h3>
+                                            <p className={styles.colSubtitle}>{item.subtitle}</p>
+                                        </div>
 
-                                    {/* Bottom info */}
-                                    <div className={styles.sliderInfo}>
-                                        <span className={styles.sliderLabel}>
-                                            {item.label}
-                                        </span>
-                                        <h3 className={styles.sliderTitle}>
-                                            {item.title}
-                                        </h3>
+                                        <div className={styles.colExpandedMid}>
+                                            <div className={styles.colDiagnostic}>
+                                                <div className={styles.diagLine}>
+                                                    <span className={styles.diagKey}>TYPE</span>
+                                                    <span className={styles.diagVal}>{item.metadata.TYPE || item.subtitle}</span>
+                                                </div>
+                                                <div className={styles.diagLine}>
+                                                    <span className={styles.diagKey}>STATUS</span>
+                                                    <span className={styles.diagVal}>{item.metadata.STATUS || "ACTIVE"}</span>
+                                                </div>
+                                                <div className={styles.diagLine}>
+                                                    <span className={styles.diagKey}>YEAR</span>
+                                                    <span className={styles.diagVal}>{item.year}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div className={styles.colExpandedBottom}>
+                                            <span className={styles.colCta}>CLICK TO DECRYPT →</span>
+                                        </div>
                                     </div>
                                 </motion.div>
-                            ))}
-                        </div>
+                            );
+                        })}
                     </motion.div>
                 ) : (
                     /* ════════ LIST VIEW ════════ */
@@ -483,4 +575,3 @@ export function EvidenceBoard() {
         </div>
     );
 }
-
