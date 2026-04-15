@@ -1,0 +1,174 @@
+.heroContainer {
+    position: relative;
+    width: 100%;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    background: var(--bg-root);
+    cursor: none;
+}
+
+/* Vignette spotlight effect - only on landing page */
+.vignette {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 10;
+    background: radial-gradient(circle 910px at var(--cursor-x, 50%) var(--cursor-y, 50%),
+            rgba(5, 10, 15, 0) 0%,
+            rgba(5, 10, 15, 0.1) 35%,
+            rgba(5, 10, 15, 0.3) 70%,
+            rgba(5, 10, 15, 0.5) 100%);
+}
+
+/* Floating background images */
+.floatingImage {
+    position: absolute;
+    opacity: 0.5;
+    z-index: 1;
+}
+
+.imagePlaceholder {
+    width: 200px;
+    height: 200px;
+    padding: var(--space-4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--border-primary);
+    border-radius: var(--radius-panel);
+    background: linear-gradient(135deg, rgba(127, 231, 214, 0.1) 0%, rgba(143, 183, 255, 0.1) 100%);
+    backdrop-filter: blur(8px);
+    color: var(--text-muted);
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-align: center;
+    font-family: var(--font-mono), monospace;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+/* Center content */
+.centerContent {
+    position: relative;
+    z-index: 5;
+    text-align: center;
+    max-width: 90%;
+    pointer-events: none;
+}
+
+.name {
+    margin: 0;
+    font-family: var(--font-serif), serif;
+    font-size: clamp(4rem, 12vw, 9rem);
+    font-weight: 700;
+    line-height: 0.9;
+    letter-spacing: -0.02em;
+    color: var(--text-primary);
+    text-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+}
+
+.designation {
+    margin: var(--space-6) 0 0;
+    font-size: clamp(0.95rem, 2vw, 1.2rem);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--signal-primary);
+    font-family: var(--font-mono), monospace;
+    font-weight: 500;
+}
+
+.summaryText {
+    margin: var(--space-4) 0 0;
+    max-width: 54ch;
+    font-size: clamp(0.9rem, 1.8vw, 1.05rem);
+    line-height: 1.8;
+    color: var(--text-secondary);
+    font-family: var(--font-serif), serif;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Custom cursor */
+.customCursor {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 32px;
+    height: 32px;
+    pointer-events: none;
+    z-index: 100;
+    mix-blend-mode: screen;
+}
+
+.customCursor::before {
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border: 2px solid var(--signal-secondary);
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(143, 183, 255, 0.3) 0%, transparent 70%);
+    box-shadow: 0 0 12px rgba(143, 183, 255, 0.4), inset 0 0 12px rgba(143, 183, 255, 0.2);
+}
+
+.customCursor::after {
+    content: "";
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    background: var(--signal-secondary);
+    border-radius: 50%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    box-shadow: 0 0 8px rgba(143, 183, 255, 0.6);
+}
+
+/* Animate floating images with subtle movement */
+@keyframes float {
+
+    0%,
+    100% {
+        transform: translateY(0px) rotate(0deg);
+    }
+
+    50% {
+        transform: translateY(-20px) rotate(2deg);
+    }
+}
+
+.floatingImage {
+    animation: float 6s ease-in-out infinite;
+}
+
+.floatingImage:nth-child(2) {
+    animation-delay: 0.5s;
+    animation-duration: 7s;
+}
+
+.floatingImage:nth-child(3) {
+    animation-delay: 1s;
+    animation-duration: 8s;
+}
+
+.floatingImage:nth-child(4) {
+    animation-delay: 1.5s;
+    animation-duration: 6.5s;
+}
+
+@media (max-width: 768px) {
+    .imagePlaceholder {
+        width: 140px;
+        height: 140px;
+    }
+
+    .floatingImage {
+        opacity: 0.3 !important;
+    }
+}

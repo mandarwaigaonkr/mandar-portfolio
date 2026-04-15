@@ -3,11 +3,10 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useMemo, useRef } from "react";
 
+import { LandingHero } from "./LandingHero";
 import { SystemLogs } from "@/features/logs/components/SystemLogs";
 import { ModuleDetailView } from "@/features/modules/components/ModuleDetailView";
 import { ModuleSlider } from "@/features/modules/components/ModuleSlider";
-import { SystemHUD } from "@/features/overlay/components/SystemHUD";
-import { SystemStatusOverlay } from "@/features/overlay/components/SystemStatusOverlay";
 import { useSystemStore } from "@/store/system-store";
 import type { LogRecord, ModuleRecord } from "@/types/system";
 
@@ -35,7 +34,6 @@ export function SystemDashboard({ logs, modules, systemMeta }: SystemDashboardPr
   const primaryModule = modules[1] ?? modules[0];
   const currentView = useSystemStore((state) => state.currentView);
   const expandedModuleId = useSystemStore((state) => state.expandedModuleId);
-  const systemStatus = useSystemStore((state) => state.systemStatus);
   const closeLogsView = useSystemStore((state) => state.closeLogsView);
   const closeModuleView = useSystemStore((state) => state.closeModuleView);
   const logsRef = useRef<HTMLDivElement | null>(null);
@@ -62,35 +60,13 @@ export function SystemDashboard({ logs, modules, systemMeta }: SystemDashboardPr
 
   return (
     <section className={styles.shell}>
-      <SystemHUD
-        moduleCount={modules.length}
-        currentRole={systemMeta.currentRole}
-        labels={systemMeta.labels}
+      <LandingHero
+        candidate={systemMeta.candidate}
+        designation={systemMeta.designation}
+        summary={systemMeta.summary}
       />
-      <SystemStatusOverlay modules={modules} systemStatus={systemStatus} />
 
       <div className={styles.inner}>
-        <div className={styles.hero}>
-          <div>
-            <p className={styles.eyebrow}>SYSTEM ACCESS GRANTED</p>
-            <h1>{systemMeta.candidate}</h1>
-            <p className={styles.designation}>{systemMeta.designation}</p>
-            <p className={styles.summary}>{systemMeta.summary}</p>
-          </div>
-
-          <motion.div
-            className={styles.heroCard}
-            initial={{ opacity: 0, y: 24 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1, duration: 0.45 }}
-          >
-            <span className={styles.cardLabel}>Primary active module</span>
-            <strong>{primaryModule.title}</strong>
-            <p>{primaryModule.summary}</p>
-            <div className={styles.placeholder}>{primaryModule.imagePlaceholder}</div>
-          </motion.div>
-        </div>
-
         <div className={styles.sectionIntro}>
           <div>
             <p className={styles.sectionLabel}>Primary interaction layer</p>

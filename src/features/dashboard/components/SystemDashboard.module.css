@@ -1,13 +1,13 @@
 .shell {
   position: relative;
   z-index: 1;
-  min-height: 100vh;
-  padding: 6.5rem var(--space-6) var(--space-8);
+  background: var(--bg-root);
 }
 
 .inner {
   width: min(100%, var(--max-width));
   margin: 0 auto;
+  padding: 6.5rem var(--space-6) var(--space-8);
 }
 
 .hero {
@@ -129,6 +129,7 @@
   display: grid;
   gap: var(--space-4);
 }
+
 .logList {
   margin: 0;
 }
@@ -149,6 +150,7 @@
 }
 
 @media (max-width: 980px) {
+
   .hero,
   .sectionIntro,
   .grid {
