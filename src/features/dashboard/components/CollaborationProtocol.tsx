@@ -36,10 +36,10 @@ export function CollaborationProtocol() {
     >
       <motion.div 
         className={styles.vectorGuide}
-        style={{ scaleX: vectorScale, rotate: -15 }}
+        style={{ scaleX: vectorScale, rotate: -25 }}
       />
       
-      <motion.div className={styles.watermarkContainer} style={{ x, y, rotate: -15 }}>
+      <motion.div className={styles.watermarkContainer} style={{ x, y, rotate: -25 }}>
         <motion.span className={styles.watermark} aria-hidden="true" style={{ opacity }}>
           {collaborationProtocolData.watermark}
         </motion.span>

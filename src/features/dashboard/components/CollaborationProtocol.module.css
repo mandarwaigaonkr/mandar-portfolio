@@ -16,17 +16,18 @@
     radial-gradient(circle at 60% 30%, rgba(0, 245, 255, 0.08), transparent 45%),
     radial-gradient(circle at 20% 70%, rgba(191, 0, 255, 0.04), transparent 50%);
   pointer-events: none;
+  mask-image: linear-gradient(180deg, transparent 0%, black 15%, black 100%);
 }
 
 .vectorGuide {
   position: absolute;
-  top: -50%;
+  top: -10%;
   left: -20%;
   width: 250%;
-  height: 2px;
-  background: linear-gradient(90deg, transparent, var(--contact-accent), transparent);
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--signal-danger), transparent);
   transform-origin: center;
-  opacity: 0.25;
+  opacity: 0.35;
   pointer-events: none;
   z-index: 0;
 }
@@ -43,7 +44,7 @@
 .watermark {
   display: block;
   font-family: var(--font-serif), serif;
-  font-size: clamp(8rem, 15vw, 12rem);
+  font-size: clamp(7rem, 14vw, 10rem);
   font-weight: 700;
   letter-spacing: 0.04em;
   color: var(--contact-accent);
