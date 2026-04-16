@@ -1,10 +1,12 @@
 "use client";
 
-import { motion, useMotionValue, useTransform } from "framer-motion";
+import { motion, useMotionValue } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 
+import { CollaborationProtocol } from "./CollaborationProtocol";
 import { LandingHero } from "./LandingHero";
 import { EvidenceBoard } from "./EvidenceBoard";
+import { ProfileMatrix } from "./ProfileMatrix";
 import type { LogRecord, ModuleRecord } from "@/types/system";
 
 import styles from "./SystemDashboard.module.css";
@@ -15,6 +17,7 @@ type SystemDashboardProps = {
   systemMeta: {
     candidate: string;
     designation: string;
+    location: string;
     availability: string;
     currentRole: string;
     summary: string;
@@ -149,9 +152,11 @@ export function SystemDashboard({ logs, modules, systemMeta }: SystemDashboardPr
 
       <EvidenceBoard />
 
-      <div className={styles.inner}>
-        {/* Additional content can be added here */}
+      <div className={styles.innerWide}>
+        <ProfileMatrix systemMeta={systemMeta} />
       </div>
+
+      <CollaborationProtocol />
 
       {/* Universal custom cursor — visible across the entire page */}
       <motion.div

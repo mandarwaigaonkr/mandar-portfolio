@@ -8,7 +8,13 @@
 .inner {
   width: min(100%, var(--max-width));
   margin: 0 auto;
-  padding: 6.5rem var(--space-6) var(--space-8);
+  padding: 4rem var(--space-6) 0;
+}
+
+.innerWide {
+  width: min(100%, calc(var(--max-width) * 1.15));
+  margin: 0 auto;
+  padding: 4rem var(--space-6) 0;
 }
 
 /* ========================================
