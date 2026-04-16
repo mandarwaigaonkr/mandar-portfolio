@@ -86,7 +86,7 @@ export function ProfileMatrix({ systemMeta }: ProfileMatrixProps) {
               <div className={styles.imageCard}>
                 <div className={styles.imageWrap}>
                   <Image
-                    src="/images/Mandar1"
+                    src="/images/Mandar1.jpg"
                     alt={`${systemMeta.candidate} profile portrait`}
                     fill
                     sizes="(max-width: 900px) 100vw, 28vw"
