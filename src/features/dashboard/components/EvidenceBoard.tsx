@@ -48,7 +48,7 @@ const EVIDENCE_DATA: Evidence[] = [
             "An immersive interactive installation exploring the intersection of digital and physical space. This project combines motion tracking, projection mapping, and real-time interaction.",
         technicalAnalysis:
             "Custom motion tracking pipeline using depth sensors and WebGL visualization. Real-time particle system with 60fps performance optimization.",
-        color: "#7fe7d6",
+        color: "#00F5FF",
         statusCode: "VTX-0091",
     },
     {
@@ -73,7 +73,7 @@ const EVIDENCE_DATA: Evidence[] = [
             "A sophisticated 3D web portfolio showcasing creative work with advanced graphics and interactive elements. Features real-time shader effects and smooth navigation.",
         technicalAnalysis:
             "Three.js implementation with custom shader development. GLSL post-processing for dynamic visual effects. Optimized for cross-browser performance.",
-        color: "#a8e6ff",
+        color: "#BF00FF",
         statusCode: "VTX-0147",
     },
     {
@@ -98,7 +98,7 @@ const EVIDENCE_DATA: Evidence[] = [
             "A comprehensive design system exploration for future interaction paradigms. Investigates new approaches to user experience design and visual communication.",
         technicalAnalysis:
             "Component architecture using React + Framer Motion. CSS variable theming system with dynamic color management. Performance monitoring and optimization suite.",
-        color: "#7fe7d6",
+        color: "#00F5FF",
         statusCode: "VTX-0203",
     },
     {
@@ -122,7 +122,7 @@ const EVIDENCE_DATA: Evidence[] = [
             "Summer internship focused on frontend development and UI implementation. Collaborated on responsive web design and component optimization.",
         technicalAnalysis:
             "Built reusable component library. Implemented responsive design patterns. Optimized bundle size and improved Lighthouse scores by 35%.",
-        color: "#a8e6ff",
+        color: "#BF00FF",
         statusCode: "VTX-0312",
     },
     {
@@ -147,7 +147,7 @@ const EVIDENCE_DATA: Evidence[] = [
             "Hand gesture recognition system using deep learning and computer vision. Real-time tracking pipeline with sub-10ms latency for interactive applications.",
         technicalAnalysis:
             "MediaPipe + custom TensorFlow model. WebSocket streaming for real-time inference. Optimized ONNX runtime for edge deployment.",
-        color: "#8fb7ff",
+        color: "#d873ff",
         statusCode: "VTX-0408",
     },
     {
@@ -172,7 +172,7 @@ const EVIDENCE_DATA: Evidence[] = [
             "A dark-first interface design system for a fintech analytics dashboard. Focuses on data density, accessibility, and visual hierarchy in low-light environments.",
         technicalAnalysis:
             "Figma design system with 200+ components. CSS custom property theming. WCAG AA contrast ratios across all dark palettes.",
-        color: "#f2c56b",
+        color: "#ADFF2F",
         statusCode: "VTX-0519",
     },
     {
@@ -197,7 +197,7 @@ const EVIDENCE_DATA: Evidence[] = [
             "A lightweight, GPU-accelerated parallax scrolling engine. Zero dependencies, ~3KB gzipped, with support for intersection-based lazy activation.",
         technicalAnalysis:
             "requestAnimationFrame loop with IntersectionObserver gating. CSS transform-only animations for compositor-friendly rendering. Ships as ESM + CJS.",
-        color: "#ff9178",
+        color: "#00F5FF",
         statusCode: "VTX-0627",
     },
 ];

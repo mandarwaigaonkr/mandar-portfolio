@@ -26,9 +26,9 @@
 
 .techPanel {
     padding: var(--space-4);
-    border: 1px solid rgba(127, 231, 214, 0.3);
+    border: 1px solid rgba(0, 245, 255, 0.2);
     border-radius: 4px;
-    background: rgba(5, 10, 15, 0.6);
+    background: rgba(10, 15, 19, 0.6);
     backdrop-filter: blur(10px);
     font-family: var(--font-mono), monospace;
     font-size: 0.75rem;
@@ -67,7 +67,7 @@
     font-family: 'Courier New', monospace;
     font-size: 0.62rem;
     line-height: 1.5;
-    color: rgba(127, 231, 214, 0.08);
+    color: rgba(0, 245, 255, 0.06);
     white-space: pre;
     letter-spacing: 0.04em;
     animation: codeDrift 40s linear infinite;
@@ -81,9 +81,9 @@
 
 @keyframes codeDrift {
     0% { opacity: 0; transform: translateY(0) translateX(0); }
-    5% { opacity: 0.08; }
-    50% { opacity: 0.05; transform: translateY(-30px) translateX(15px); }
-    95% { opacity: 0.08; }
+    5% { opacity: 0.06; }
+    50% { opacity: 0.04; transform: translateY(-30px) translateX(15px); }
+    95% { opacity: 0.06; }
     100% { opacity: 0; transform: translateY(-60px) translateX(30px); }
 }
 
@@ -150,7 +150,7 @@
     font-family: var(--font-mono), monospace;
     font-size: 0.65rem;
     letter-spacing: 0.08em;
-    color: rgba(127, 231, 214, 0.4);
+    color: rgba(0, 245, 255, 0.35);
     line-height: 1.6;
     pointer-events: none;
 }
@@ -164,14 +164,14 @@
     display: block;
     font-size: 0.55rem;
     letter-spacing: 0.14em;
-    color: rgba(127, 231, 214, 0.25);
+    color: rgba(0, 245, 255, 0.2);
     text-transform: uppercase;
     margin-bottom: 2px;
 }
 
 .hudValue {
     display: block;
-    color: rgba(127, 231, 214, 0.5);
+    color: rgba(0, 245, 255, 0.4);
 }
 
 /* ── Status dot (blinking) ── */
@@ -188,7 +188,7 @@
 
 @keyframes dotPulse {
     0%, 100% { opacity: 0.3; box-shadow: none; }
-    50% { opacity: 1; box-shadow: 0 0 6px rgba(127, 231, 214, 0.5); }
+    50% { opacity: 1; box-shadow: 0 0 6px rgba(0, 245, 255, 0.4); }
 }
 
 /* ── Heartbeat waveform ── */
@@ -201,7 +201,7 @@
 
 .heartbeatPath {
     fill: none;
-    stroke: rgba(127, 231, 214, 0.35);
+    stroke: rgba(0, 245, 255, 0.3);
     stroke-width: 1.5;
     stroke-linecap: round;
     stroke-dasharray: 200;

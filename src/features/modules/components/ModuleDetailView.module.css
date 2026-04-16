@@ -1,11 +1,11 @@
 .surface {
   position: relative;
   z-index: 1;
-  border: 1px solid rgba(93, 129, 149, 0.26);
+  border: 1px solid rgba(0, 245, 255, 0.1);
   border-radius: 32px;
   background:
-    linear-gradient(180deg, rgba(127, 231, 214, 0.08), transparent 18%),
-    rgba(7, 17, 24, 0.94);
+    linear-gradient(180deg, rgba(0, 245, 255, 0.05), transparent 18%),
+    rgba(10, 18, 24, 0.94);
   box-shadow: var(--shadow-panel);
 }
 
@@ -80,9 +80,9 @@
 .actions a,
 .actions button {
   padding: 0.85rem 1rem;
-  border: 1px solid rgba(127, 231, 214, 0.24);
+  border: 1px solid rgba(0, 245, 255, 0.15);
   border-radius: 999px;
-  background: rgba(127, 231, 214, 0.08);
+  background: rgba(0, 245, 255, 0.05);
   color: var(--text-primary);
   cursor: pointer;
 }
@@ -113,9 +113,9 @@
 
 .stackChip {
   padding: 0.55rem 0.75rem;
-  border: 1px solid rgba(143, 183, 255, 0.24);
+  border: 1px solid rgba(191, 0, 255, 0.18);
   border-radius: 999px;
-  background: rgba(143, 183, 255, 0.08);
+  background: rgba(191, 0, 255, 0.06);
   color: var(--text-primary);
   font-size: 0.84rem;
 }
@@ -125,8 +125,8 @@
 .storyCard,
 .layerCard,
 .panel {
-  border: 1px solid rgba(93, 129, 149, 0.22);
-  background: rgba(8, 18, 25, 0.82);
+  border: 1px solid rgba(0, 245, 255, 0.09);
+  background: rgba(10, 18, 25, 0.82);
 }
 
 .visualFrame {
@@ -216,7 +216,7 @@
 
 .logItem {
   padding-top: var(--space-4);
-  border-top: 1px solid rgba(93, 129, 149, 0.18);
+  border-top: 1px solid rgba(0, 245, 255, 0.08);
 }
 
 @media (max-width: 980px) {

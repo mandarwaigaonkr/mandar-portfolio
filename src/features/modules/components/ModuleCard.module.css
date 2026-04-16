@@ -3,11 +3,11 @@
   flex: 0 0 min(38rem, 72vw);
   min-height: 70vh;
   padding: var(--space-6);
-  border: 1px solid rgba(93, 129, 149, 0.26);
+  border: 1px solid rgba(0, 245, 255, 0.1);
   border-radius: 28px;
   background:
-    linear-gradient(180deg, rgba(143, 183, 255, 0.06), transparent 22%),
-    rgba(8, 18, 25, 0.9);
+    linear-gradient(180deg, rgba(191, 0, 255, 0.04), transparent 22%),
+    rgba(10, 18, 25, 0.9);
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.26);
   transition:
     border-color 180ms ease,
@@ -21,7 +21,7 @@
   position: absolute;
   width: 22px;
   height: 22px;
-  border-color: rgba(127, 231, 214, 0.42);
+  border-color: rgba(0, 245, 255, 0.3);
   pointer-events: none;
 }
 
@@ -30,7 +30,7 @@
   left: 1rem;
   border-top: 1px solid currentColor;
   border-left: 1px solid currentColor;
-  color: rgba(127, 231, 214, 0.42);
+  color: rgba(0, 245, 255, 0.3);
 }
 
 .card::after {
@@ -38,15 +38,15 @@
   bottom: 1rem;
   border-right: 1px solid currentColor;
   border-bottom: 1px solid currentColor;
-  color: rgba(127, 231, 214, 0.42);
+  color: rgba(0, 245, 255, 0.3);
 }
 
 .cardActive {
   transform: translateY(-8px);
-  border-color: rgba(127, 231, 214, 0.54);
+  border-color: rgba(0, 245, 255, 0.35);
   background:
-    linear-gradient(180deg, rgba(127, 231, 214, 0.12), transparent 22%),
-    rgba(8, 18, 25, 0.96);
+    linear-gradient(180deg, rgba(0, 245, 255, 0.08), transparent 22%),
+    rgba(10, 18, 25, 0.96);
 }
 
 .frameTop,
@@ -101,9 +101,9 @@
   min-height: 220px;
   display: grid;
   place-items: center;
-  border: 1px dashed rgba(143, 183, 255, 0.28);
+  border: 1px dashed rgba(191, 0, 255, 0.2);
   border-radius: 22px;
-  background: rgba(2, 8, 12, 0.88);
+  background: rgba(8, 12, 16, 0.88);
   color: var(--text-muted);
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -113,7 +113,7 @@
 .metrics {
   margin-top: var(--space-8);
   padding-top: var(--space-5);
-  border-top: 1px solid rgba(93, 129, 149, 0.18);
+  border-top: 1px solid rgba(0, 245, 255, 0.08);
 }
 
 .metric strong {
@@ -130,9 +130,9 @@
 
 .inspectButton {
   padding: 0.85rem 1rem;
-  border: 1px solid rgba(127, 231, 214, 0.22);
+  border: 1px solid rgba(0, 245, 255, 0.15);
   border-radius: 999px;
-  background: rgba(127, 231, 214, 0.08);
+  background: rgba(0, 245, 255, 0.05);
   color: var(--text-primary);
   cursor: pointer;
 }
