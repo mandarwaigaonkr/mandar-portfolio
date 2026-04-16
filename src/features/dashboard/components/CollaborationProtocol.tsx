@@ -46,7 +46,7 @@ export function CollaborationProtocol() {
         <motion.div className={styles.watermarkBelt} style={{ x: beltX, opacity }}>
           {watermarks.map((text, i) => (
             <span key={i} className={styles.watermark} aria-hidden="true">
-              {text} <span className={styles.watermarkSeparator}>///</span>
+              {text} <span className={styles.watermarkSeparator}>{"///"}</span>
             </span>
           ))}
         </motion.div>
