@@ -32,27 +32,50 @@
   z-index: 0;
 }
 
-.watermarkContainer {
+/* ================== LOCKED-AXIS HORIZONTAL RAIL ==================== */
+.watermarkRail {
   position: absolute;
-  inset: 0;
-  display: grid;
-  place-items: center;
+  top: 50%;
+  left: 50%;
+  width: 250vw;
+  height: 25rem;
+  /* Rotate the whole track mechanically */
+  transform: translate(-50%, -50%) rotate(-25deg);
+  overflow: hidden;
   pointer-events: none;
   z-index: 0;
+  display: flex;
+  align-items: center;
+  mask-image: linear-gradient(90deg, transparent 0%, black 15%, black 85%, transparent 100%);
+}
+
+.watermarkBelt {
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+  will-change: transform;
 }
 
 .watermark {
-  display: block;
+  display: flex;
+  align-items: center;
   font-family: var(--font-serif), serif;
   font-size: clamp(7rem, 14vw, 10rem);
   font-weight: 700;
   letter-spacing: 0.04em;
   color: var(--contact-accent);
-  white-space: nowrap;
   user-select: none;
   text-transform: uppercase;
   line-height: 1;
   mix-blend-mode: color-dodge;
+}
+
+.watermarkSeparator {
+  margin: 0 3rem;
+  font-family: var(--font-mono), monospace;
+  font-size: clamp(2rem, 4vw, 3rem);
+  color: rgba(0, 245, 255, 0.2);
+  letter-spacing: 0.1em;
 }
 
 .stack {
