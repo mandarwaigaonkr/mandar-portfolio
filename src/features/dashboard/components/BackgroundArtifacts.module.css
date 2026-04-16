@@ -1,0 +1,74 @@
+.container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  /* Placed above pure backgrounds but below interactive modules/panels */
+  z-index: 1; 
+  overflow: hidden;
+}
+
+.artifact {
+  position: absolute;
+  color: var(--signal-primary);
+  opacity: 0.15; /* Extremely faded out */
+  mix-blend-mode: screen;
+  padding: 0.5rem;
+}
+
+.artifactText {
+  margin: 0;
+  font-family: var(--font-mono), monospace;
+  font-size: 0.65rem;
+  line-height: 1.6;
+  letter-spacing: 0.08em;
+  white-space: pre-wrap;
+}
+
+.crosshairTopLeft,
+.crosshairBottomRight {
+  position: absolute;
+  font-family: var(--font-mono), monospace;
+  font-size: 0.6rem;
+  color: rgba(255, 255, 255, 0.45);
+  line-height: 1;
+}
+
+.crosshairTopLeft {
+  top: 0;
+  left: 0;
+  transform: translate(-50%, -50%);
+}
+
+.crosshairBottomRight {
+  bottom: 0;
+  right: 0;
+  transform: translate(50%, 50%);
+}
+
+.svgWidget {
+  position: absolute;
+  color: var(--signal-primary);
+  opacity: 0.2; /* Will be managed heavily by framer motion inline */
+  mix-blend-mode: screen;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.8rem;
+  pointer-events: none;
+}
+
+.widgetLabel {
+  font-family: var(--font-mono), monospace;
+  font-size: 0.5rem;
+  letter-spacing: 0.25em;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+@media (max-width: 720px) {
+  .artifact {
+    opacity: 0.08; /* Subdue even more on mobile to prevent squished clutter */
+  }
+}

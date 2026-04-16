@@ -4,6 +4,7 @@ import { motion, useMotionValue } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 
 import { CollaborationProtocol } from "./CollaborationProtocol";
+import { BackgroundArtifacts } from "./BackgroundArtifacts";
 import { LandingHero } from "./LandingHero";
 import { EvidenceBoard } from "./EvidenceBoard";
 import { ProfileMatrix } from "./ProfileMatrix";
@@ -140,6 +141,7 @@ export function SystemDashboard({ logs, modules, systemMeta }: SystemDashboardPr
 
       {/* Universal vignette spotlight — follows cursor, radius grows on scroll */}
       <div className={styles.vignette} ref={vignetteRef} />
+      <BackgroundArtifacts />
 
       {/* Page content */}
       <LandingHero
