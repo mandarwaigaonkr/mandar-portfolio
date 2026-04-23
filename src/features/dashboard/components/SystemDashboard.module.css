@@ -34,7 +34,7 @@
     rgba(191, 0, 255, 0.03) 40%,
     transparent 100%
   );
-  transition: background 0.1s ease-out;
+  contain: strict;
 }
 
 /* Vignette spotlight — radius grows as user scrolls down */
@@ -50,6 +50,7 @@
     rgba(10, 15, 19, 0.3) 65%,
     rgba(10, 15, 19, 0.55) 100%
   );
+  contain: strict;
 }
 
 /* Custom cursor — theme-matched cyan */
@@ -61,8 +62,8 @@
   height: 20px;
   pointer-events: none;
   z-index: 100;
-  mix-blend-mode: color-dodge;
   transform: translate(-50%, -50%);
+  will-change: transform;
 }
 
 .customCursor::before {

@@ -76,6 +76,7 @@
     transform: translateY(-50%);
     box-shadow: 0 0 6px rgba(0, 245, 255, 0.08);
     transition: opacity 0.4s ease;
+    will-change: opacity;
 }
 
 .seamLineActive {

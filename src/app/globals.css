@@ -53,9 +53,8 @@ body::after {
   background:
     linear-gradient(180deg, transparent, rgba(10, 15, 19, 0.28)),
     radial-gradient(circle, rgba(255, 255, 255, 0.04) 0.5px, transparent 0.5px);
-  background-size: auto, 6px 6px;
-  mix-blend-mode: soft-light;
-  opacity: 0.28;
+  background-size: auto, 4px 4px;
+  opacity: 0.22;
   z-index: 0;
 }
 
@@ -84,5 +83,13 @@ input {
     animation-iteration-count: 1 !important;
     scroll-behavior: auto !important;
     transition-duration: 0.01ms !important;
+  }
+}
+
+/* Hide expensive fixed pseudo-element overlays on mobile */
+@media (max-width: 768px) {
+  body::before,
+  body::after {
+    display: none;
   }
 }

@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, useMotionValue } from "framer-motion";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 
 import { CollaborationProtocol } from "./CollaborationProtocol";
 import { BackgroundArtifacts } from "./BackgroundArtifacts";
@@ -31,6 +31,11 @@ type SystemDashboardProps = {
   };
 };
 
+function isTouchDevice() {
+  if (typeof window === "undefined") return false;
+  return "ontouchstart" in window || navigator.maxTouchPoints > 0;
+}
+
 export function SystemDashboard({ logs, modules, systemMeta }: SystemDashboardProps) {
   const vignetteRef = useRef<HTMLDivElement>(null);
   const gradientRef = useRef<HTMLDivElement>(null);
@@ -38,11 +43,26 @@ export function SystemDashboard({ logs, modules, systemMeta }: SystemDashboardPr
   const cursorX = useMotionValue(0);
   const cursorY = useMotionValue(0);
   const [cursorState, setCursorState] = useState<"default" | "click" | "hover">("default");
+  const [isTouch, setIsTouch] = useState(false);
 
-  // Track scroll progress (0 = top of page, 1 = scrolled 1 viewport height)
-  const [scrollRatio, setScrollRatio] = useState(0);
+  // Ref-based cursor state to avoid re-renders on every mouse move
+  const cursorStateRef = useRef<"default" | "click" | "hover">("default");
+
+  const updateCursorState = useCallback((newState: "default" | "click" | "hover") => {
+    if (cursorStateRef.current !== newState) {
+      cursorStateRef.current = newState;
+      setCursorState(newState);
+    }
+  }, []);
 
   useEffect(() => {
+    setIsTouch(isTouchDevice());
+  }, []);
+
+  useEffect(() => {
+    // Skip all cursor tracking on touch devices
+    if (isTouch) return;
+
     let animationFrameId: number;
     let targetX = 0;
     let targetY = 0;
@@ -65,7 +85,7 @@ export function SystemDashboard({ logs, modules, systemMeta }: SystemDashboardPr
         gradientRef.current.style.setProperty("--gradient-y", `${yPercent}%`);
       }
 
-      // Detect interactive elements for cursor state
+      // Detect interactive elements for cursor state — only update React state on actual change
       const target = event.target as HTMLElement;
       if (
         target &&
@@ -75,19 +95,18 @@ export function SystemDashboard({ logs, modules, systemMeta }: SystemDashboardPr
           target.closest("a") ||
           target.classList.contains("interactive"))
       ) {
-        setCursorState("hover");
+        updateCursorState("hover");
       } else {
-        setCursorState("default");
+        updateCursorState("default");
       }
     };
 
-    const handleMouseDown = () => setCursorState("click");
-    const handleMouseUp = () => setCursorState("default");
+    const handleMouseDown = () => updateCursorState("click");
+    const handleMouseUp = () => updateCursorState("default");
 
     const handleScroll = () => {
       const vh = window.innerHeight;
       const ratio = Math.min(window.scrollY / vh, 1);
-      setScrollRatio(ratio);
 
       // Dynamically update the vignette radius via CSS custom property
       // Starts at 910px at top, expands to 1600px as you scroll down
@@ -132,7 +151,7 @@ export function SystemDashboard({ logs, modules, systemMeta }: SystemDashboardPr
       window.removeEventListener("scroll", handleScroll);
       cancelAnimationFrame(animationFrameId);
     };
-  }, [cursorX, cursorY]);
+  }, [cursorX, cursorY, isTouch, updateCursorState]);
 
   return (
     <section className={styles.shell}>
@@ -160,14 +179,16 @@ export function SystemDashboard({ logs, modules, systemMeta }: SystemDashboardPr
 
       <CollaborationProtocol />
 
-      {/* Universal custom cursor — visible across the entire page */}
-      <motion.div
-        className={`${styles.customCursor} ${styles[cursorState]}`}
-        style={{
-          x: cursorX,
-          y: cursorY,
-        }}
-      />
+      {/* Universal custom cursor — visible across the entire page, hidden on touch */}
+      {!isTouch && (
+        <motion.div
+          className={`${styles.customCursor} ${styles[cursorState]}`}
+          style={{
+            x: cursorX,
+            y: cursorY,
+          }}
+        />
+      )}
     </section>
   );
 }

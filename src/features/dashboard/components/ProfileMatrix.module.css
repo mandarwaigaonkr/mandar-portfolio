@@ -86,7 +86,6 @@
   background: var(--bg-panel);
   box-shadow: var(--shadow-panel);
   overflow: hidden;
-  min-height: 800px;
 }
 
 .frame::before {
@@ -496,6 +495,11 @@
   .header {
     flex-direction: column;
     align-items: stretch;
+    margin-bottom: 2rem;
+  }
+
+  .title {
+    font-size: clamp(2rem, 7vw, 3.5rem);
   }
 
   .headerMeta,
@@ -516,10 +520,20 @@
   .identityPanel,
   .inventoryPanel,
   .centerColumn {
-    padding: 2.4rem;
+    padding: 1.5rem;
   }
 
   .reportText {
     font-size: 1.04rem;
+  }
+
+  /* Hide the expensive grid-pattern overlay on mobile */
+  .frame::before {
+    display: none;
+  }
+
+  .imageWrap {
+    max-width: 280px;
+    margin: 0 auto;
   }
 }

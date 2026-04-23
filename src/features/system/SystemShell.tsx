@@ -1,7 +1,6 @@
 "use client";
 
 import { MotionConfig, motion } from "framer-motion";
-import { useEffect } from "react";
 
 import { BreachSequence } from "@/features/boot/components/BreachSequence";
 import { SystemDashboard } from "@/features/dashboard/components/SystemDashboard";
@@ -29,20 +28,6 @@ type SystemShellProps = {
 
 export function SystemShell({ logs, modules, systemMeta }: SystemShellProps) {
   const currentView = useSystemStore((state) => state.currentView);
-  const setCursorState = useSystemStore((state) => state.setCursorState);
-
-  useEffect(() => {
-    const handlePointerMove = (event: MouseEvent) => {
-      setCursorState({
-        x: event.clientX,
-        y: event.clientY,
-        mode: "tracking"
-      });
-    };
-
-    window.addEventListener("mousemove", handlePointerMove);
-    return () => window.removeEventListener("mousemove", handlePointerMove);
-  }, [setCursorState]);
 
   // Dashboard is always mounted once unlocked — it sits BEHIND the breach panels
   const showDashboard = currentView === "dashboard" || currentView === "module" || currentView === "logs";

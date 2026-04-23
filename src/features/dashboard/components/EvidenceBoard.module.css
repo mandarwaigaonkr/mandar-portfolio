@@ -126,6 +126,7 @@
     background: rgba(10, 13, 18, 0.95);
     border: 1px solid rgba(0, 245, 255, 0.05);
     border-radius: 6px;
+    contain: layout style;
 
     /* The magic: GPU-accelerated flex transition with expo easing */
     transition:
@@ -435,8 +436,7 @@
     max-width: 280px;
     padding: var(--space-3);
     border: 1px solid rgba(0, 245, 255, 0.12);
-    background: rgba(10, 13, 18, 0.6);
-    backdrop-filter: blur(8px);
+    background: rgba(10, 13, 18, 0.85);
 }
 
 .diagLine {
@@ -702,7 +702,7 @@
     gap: var(--space-2);
     padding: var(--space-2) var(--space-4);
     border: 1px solid rgba(0, 245, 255, 0.2);
-    background: rgba(10, 15, 19, 0.85);
+    background: rgba(10, 15, 19, 0.92);
     color: var(--signal-primary);
     font-size: 0.8rem;
     letter-spacing: 0.08em;
@@ -712,7 +712,6 @@
     border-radius: 2px;
     font-weight: 500;
     text-transform: uppercase;
-    backdrop-filter: blur(8px);
 }
 
 .morphCloseBtn:hover {
@@ -841,7 +840,7 @@
     gap: var(--space-2);
     padding: var(--space-2) var(--space-4);
     border: 1px solid rgba(0, 245, 255, 0.2);
-    background: rgba(10, 15, 19, 0.85);
+    background: rgba(10, 15, 19, 0.92);
     color: var(--signal-primary);
     font-size: 0.8rem;
     letter-spacing: 0.08em;
@@ -853,7 +852,6 @@
     text-transform: uppercase;
     z-index: 10;
     margin-bottom: var(--space-4);
-    backdrop-filter: blur(8px);
 }
 
 .backBtn:hover {
@@ -1088,12 +1086,13 @@
 
     .accordionColumn {
         flex: none !important;
-        height: 80px;
+        height: 72px;
         transition: height 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        contain: layout style;
     }
 
     .accordionActive {
-        height: 320px;
+        height: 300px;
     }
 
     .colCategoryVertical {

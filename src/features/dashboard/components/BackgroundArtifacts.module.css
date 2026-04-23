@@ -14,8 +14,8 @@
   position: absolute;
   color: var(--signal-primary);
   opacity: 0.15; /* Extremely faded out */
-  mix-blend-mode: screen;
   padding: 0.5rem;
+  will-change: transform, opacity;
 }
 
 .artifactText {
@@ -52,12 +52,12 @@
   position: absolute;
   color: var(--signal-primary);
   opacity: 0.2; /* Will be managed heavily by framer motion inline */
-  mix-blend-mode: screen;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 0.8rem;
   pointer-events: none;
+  will-change: transform, opacity;
 }
 
 .widgetLabel {

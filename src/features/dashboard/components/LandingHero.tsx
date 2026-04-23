@@ -40,8 +40,11 @@ type LandingHeroProps = {
 export function LandingHero({ candidate, designation, summary, cursorX, cursorY }: LandingHeroProps) {
     const containerRef = useRef<HTMLDivElement>(null);
     const [uptime, setUptime] = useState("00:00:00");
-    const [cursorPos, setCursorPos] = useState({ x: 0, y: 0 });
     const startTime = useRef(Date.now());
+
+    // Refs for direct DOM mutation — avoids React re-renders on every mouse move
+    const coordsRef1 = useRef<HTMLDivElement>(null);
+    const coordsRef2 = useRef<HTMLDivElement>(null);
 
     // Parallax transforms for floating panels
     const floatingX1 = useTransform(cursorX, [0, typeof window !== "undefined" ? window.innerWidth : 1024], [-40, 40]);
@@ -65,10 +68,12 @@ export function LandingHero({ candidate, designation, summary, cursorX, cursorY 
         return () => clearInterval(timer);
     }, []);
 
-    /* ── Track cursor for coordinate display ── */
+    /* ── Track cursor for coordinate display via direct DOM mutation (no re-renders) ── */
     useEffect(() => {
         const handleMouseMove = (event: MouseEvent) => {
-            setCursorPos({ x: event.clientX, y: event.clientY });
+            const text = `X: ${Math.round(event.clientX)} Y: ${Math.round(event.clientY)}`;
+            if (coordsRef1.current) coordsRef1.current.textContent = text;
+            if (coordsRef2.current) coordsRef2.current.textContent = text;
         };
         window.addEventListener("mousemove", handleMouseMove);
         return () => window.removeEventListener("mousemove", handleMouseMove);
@@ -111,7 +116,7 @@ export function LandingHero({ candidate, designation, summary, cursorX, cursorY 
                     <div className={styles.techLog}>{">>"} sys_uptime: {uptime}</div>
                     <div className={styles.techLog}>{">>"} status: ENCRYPTED</div>
                     <div className={styles.techLog}>{">>"} channel: SECURE</div>
-                    <div className={styles.techCoords}>X: {Math.round(cursorPos.x)} Y: {Math.round(cursorPos.y)}</div>
+                    <div className={styles.techCoords} ref={coordsRef1}>X: 0 Y: 0</div>
                 </div>
             </motion.div>
 
@@ -123,7 +128,7 @@ export function LandingHero({ candidate, designation, summary, cursorX, cursorY 
                 transition={{ delay: 0.4, duration: 0.8 }}
             >
                 <div className={styles.techPanel}>
-                    <div className={styles.techCoords}>X: {Math.round(cursorPos.x)} Y: {Math.round(cursorPos.y)}</div>
+                    <div className={styles.techCoords} ref={coordsRef2}>X: 0 Y: 0</div>
                 </div>
             </motion.div>
 

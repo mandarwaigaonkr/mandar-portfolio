@@ -21,13 +21,16 @@ const ARTIFACT_DATA = [
 
 export function BackgroundArtifacts() {
   const [mounted, setMounted] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
   const { scrollYProgress } = useScroll();
 
   useEffect(() => {
     setMounted(true);
+    // Cull all scroll-driven artifacts on mobile — they're purely decorative and very expensive
+    setIsMobile(window.innerWidth <= 768);
   }, []);
 
-  if (!mounted) return null;
+  if (!mounted || isMobile) return null;
 
   return (
     <div className={styles.container} aria-hidden="true">
@@ -36,7 +39,7 @@ export function BackgroundArtifacts() {
       <DataPipelineArtifact scrollYProgress={scrollYProgress} top="60%" left="6%" />
       <RadarArtifact scrollYProgress={scrollYProgress} top="84%" right="10%" />
 
-      {/* 2. Text/Code Arrays with dynamic skew and pulse fading */}
+      {/* 2. Text/Code Arrays with dynamic pulse fading */}
       {ARTIFACT_DATA.map((artifact, index) => (
         <ArtifactNode key={index} artifact={artifact} scrollYProgress={scrollYProgress} />
       ))}
@@ -60,9 +63,6 @@ function ArtifactNode({
     [0.08, 0.35, 0.05, 0.45, 0.08]
   );
 
-  // DYNAMIC STATE 2: Fast-moving artifacts will skew dramatically as they accelerate past the viewport
-  const dynamicSkew = useTransform(scrollYProgress, [0, 1], [0, artifact.speed > 80 ? 15 : -10]);
-
   return (
     <motion.div
       className={styles.artifact}
@@ -72,7 +72,6 @@ function ArtifactNode({
         top: artifact.top,
         y: yDrift,
         opacity: opacityPulse,
-        skewX: dynamicSkew,
       }}
     >
       <span className={styles.crosshairTopLeft}>+</span>
